@@ -8,10 +8,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import com.mercadolibre.android.ui.widgets.MeliButton;
 import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.internal.base.PXActivity;
 import com.mercadopago.android.px.internal.util.ViewUtils;
 import com.mercadopago.android.px.tracking.internal.views.CardAssociationResultViewTrack;
 
-public class CardAssociationResultSuccessActivity extends AppCompatActivity {
+public class CardAssociationResultSuccessActivity extends PXActivity {
 
     public static void startCardAssociationResultSuccessActivity(final Activity callerActivity) {
         final Intent intent = new Intent(callerActivity, CardAssociationResultSuccessActivity.class);

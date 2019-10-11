@@ -14,9 +14,9 @@ public abstract class PXActivity<P extends BasePresenter> extends AppCompatActiv
 
     protected P presenter;
 
-    @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState, @Nullable final PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+   @Override
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if(!Session.getInstance().isInitialized()){
             finish();
         }

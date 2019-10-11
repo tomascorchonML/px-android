@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.core.SplitPaymentProcessor;
+import com.mercadopago.android.px.internal.base.PXActivity;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandlerWrapper;
 import com.mercadopago.android.px.internal.datasource.EscPaymentManagerImp;
@@ -40,7 +41,7 @@ import static com.mercadopago.android.px.internal.features.Constants.RESULT_FAIL
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_PAYMENT;
 import static com.mercadopago.android.px.internal.util.ErrorUtil.ERROR_REQUEST_CODE;
 
-public final class PaymentProcessorActivity extends AppCompatActivity
+public final class PaymentProcessorActivity extends PXActivity
     implements SplitPaymentProcessor.OnPaymentListener,
     PaymentProcessor.OnPaymentListener {
 
