@@ -127,8 +127,8 @@ public final class ReviewAndConfirmActivity extends BaseActivity<ReviewAndConfir
      * the UI for review and confirm right away, and we can start the recover payment process
      */
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         setContentView(R.layout.px_view_container_review_and_confirm);
         initializeViews();
         final Session session = Session.getInstance();
