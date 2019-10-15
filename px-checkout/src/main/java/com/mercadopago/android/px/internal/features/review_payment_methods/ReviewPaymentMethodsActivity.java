@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Size;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.FrameLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -20,12 +19,12 @@ import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.lang.reflect.Type;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 public class ReviewPaymentMethodsActivity extends BaseActivity<ReviewPaymentMethodsPresenter>
     implements ReviewPaymentMethods.View {
 
     private static final String EXTRA_PAYMENT_METHODS = "EXTRA_PAYMENT_METHODS";
-    private ReviewPaymentMethodsPresenter presenter;
     private RecyclerView recyclerView;
 
     public static void start(final Activity activity, final List<PaymentMethod> paymentMethods,
@@ -36,17 +35,14 @@ public class ReviewPaymentMethodsActivity extends BaseActivity<ReviewPaymentMeth
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstance) {
-        super.onCreate(savedInstance);
+    protected void onPostCreate(final Bundle savedInstance) {
+        super.onPostCreate(savedInstance);
         setContentView(R.layout.px_activity_review_payment_methods);
         recyclerView = findViewById(R.id.mpsdkReviewPaymentMethodsView);
         final FrameLayout mTryOtherCardButton = findViewById(R.id.tryOtherCardButton);
-        mTryOtherCardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                finish();
-                overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_slide_down_activity);
-            }
+        mTryOtherCardButton.setOnClickListener(view -> {
+            finish();
+            overridePendingTransition(R.anim.px_no_change_animation, R.anim.px_slide_down_activity);
         });
         initPresenter();
     }
@@ -59,11 +55,11 @@ public class ReviewPaymentMethodsActivity extends BaseActivity<ReviewPaymentMeth
             }.getType();
             supportedPaymentMethods = gson.fromJson(getIntent().getStringExtra(EXTRA_PAYMENT_METHODS), listType);
         } catch (final Exception ex) {
-            showError(new MercadoPagoError(getString(R.string.px_standard_error_message), false), "");
+            showError(new MercadoPagoError(getString(R.string.px_standard_error_message), false), StringUtils.EMPTY);
         }
 
         if (supportedPaymentMethods != null && !supportedPaymentMethods.isEmpty()) {
-            presenter = new ReviewPaymentMethodsPresenter(supportedPaymentMethods);
+            final ReviewPaymentMethodsPresenter presenter = new ReviewPaymentMethodsPresenter(supportedPaymentMethods);
             presenter.attachView(this);
             presenter.initialize();
         } else {
