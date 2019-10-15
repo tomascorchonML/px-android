@@ -379,10 +379,9 @@ public class SecurityCodePresenter extends AbstractBasePresenter<SecurityCodeAct
         reason = Reason.valueOf(fromBundle.getString(BUNDLE_REASON));
     }
 
-    @NonNull
     @Override
-    public Bundle storeInBundle(@NonNull final Bundle toBundle) {
+    public void storeInBundle(@NonNull final Bundle toBundle) {
+        super.storeInBundle(toBundle);
         toBundle.putString(BUNDLE_REASON, reason.name());
-        return super.storeInBundle(toBundle);
     }
 }

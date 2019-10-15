@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.mercadopago.android.px.R;
@@ -80,9 +81,7 @@ public class CheckoutActivity extends BaseActivity<CheckoutPresenter>
     protected void onPostCreate(final Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         setContentView(R.layout.px_activity_checkout);
-        if (savedInstanceState == null) {
-            initPresenter();
-        }
+        presenter = createPresenter();
     }
 
     @Override
@@ -92,53 +91,23 @@ public class CheckoutActivity extends BaseActivity<CheckoutPresenter>
         if (presenter != null) {
             presenter.detachView();
         }
-        initPresenter();
-    }
-
-    private void initPresenter() {
-        presenter = getActivityParameters();
+        presenter = createPresenter();
         presenter.attachView(this);
-        presenter.initialize();
     }
 
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.storeInBundle(outState);
         outState.putString(EXTRA_PRIVATE_KEY, privateKey);
         outState.putString(EXTRA_PUBLIC_KEY, merchantPublicKey);
-        if (presenter != null) {
-            final CheckoutStateModel state = presenter.getState();
-            state.toBundle(outState);
-        }
-
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(final Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            final Session session = Session.getInstance();
-            final ConfigurationModule configurationModule = session.getConfigurationModule();
-
-            //TODO remove try catch after session is persisted
-            presenter =
-                new CheckoutPresenter(CheckoutStateModel.fromBundle(savedInstanceState),
-                    configurationModule.getPaymentSettings(),
-                    configurationModule.getUserSelectionRepository(),
-                    session.getGroupsRepository(),
-                    session.getPluginRepository(),
-                    session.getPaymentRepository(),
-                    session.getCheckoutPreferenceRepository(),
-                    session.getPaymentRewardRepository(),
-                    session.getInternalConfiguration());
-
-            privateKey = savedInstanceState.getString(EXTRA_PRIVATE_KEY);
-            merchantPublicKey = savedInstanceState.getString(EXTRA_PUBLIC_KEY);
-            presenter.attachView(this);
-
-            if (presenter.getState().isExpressCheckout) {
-                presenter.retrievePaymentMethodSearch();
-            }
-        }
+        presenter.recoverFromBundle(savedInstanceState);
+        privateKey = savedInstanceState.getString(EXTRA_PRIVATE_KEY);
+        merchantPublicKey = savedInstanceState.getString(EXTRA_PUBLIC_KEY);
     }
 
     @Override
@@ -150,19 +119,17 @@ public class CheckoutActivity extends BaseActivity<CheckoutPresenter>
         }
     }
 
-    protected CheckoutPresenter getActivityParameters() {
+    @NonNull
+    protected CheckoutPresenter createPresenter() {
         final Session session = Session.getInstance();
         final ConfigurationModule configurationModule = session.getConfigurationModule();
         final PaymentSettingRepository configuration = configurationModule.getPaymentSettings();
 
         privateKey = configuration.getPrivateKey();
 
-        final CheckoutStateModel persistentData = new CheckoutStateModel();
-
         merchantPublicKey = configuration.getPublicKey();
 
-        return new CheckoutPresenter(persistentData,
-            configuration,
+        return new CheckoutPresenter(configuration,
             configurationModule.getUserSelectionRepository(),
             session.getGroupsRepository(),
             session.getPluginRepository(),

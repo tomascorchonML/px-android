@@ -20,8 +20,6 @@ public interface BasePresenter<V extends BaseView> {
     default void recoverFromBundle(@NonNull final Bundle bundle) {
     }
 
-    @NonNull
-    default Bundle storeInBundle(@NonNull final Bundle bundle) {
-        return bundle;
+    default void storeInBundle(@NonNull final Bundle bundle) {
     }
 }

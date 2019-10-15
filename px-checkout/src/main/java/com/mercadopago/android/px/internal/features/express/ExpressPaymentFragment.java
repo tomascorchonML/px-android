@@ -244,21 +244,15 @@ public class ExpressPaymentFragment extends BaseFragment<ExpressPaymentPresenter
 
     @Override
     public void onSaveInstanceState(@NonNull final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.storeInBundle(outState);
         outState.putString(EXTRA_RENDER_MODE, renderMode);
-        if (presenter != null) {
-            super.onSaveInstanceState(presenter.storeInBundle(outState));
-        } else {
-            super.onSaveInstanceState(outState);
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //TODO remove null check after session is persisted
-        if (presenter != null) {
-            presenter.onViewResumed();
-        }
+        presenter.onViewResumed();
     }
 
     @Override

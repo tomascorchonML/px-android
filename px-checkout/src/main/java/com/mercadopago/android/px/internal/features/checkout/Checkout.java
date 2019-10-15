@@ -74,8 +74,6 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
     }
 
     /* default */ interface Actions {
-        void initialize();
-
         void retrievePaymentMethodSearch();
 
         boolean isESCEnabled();

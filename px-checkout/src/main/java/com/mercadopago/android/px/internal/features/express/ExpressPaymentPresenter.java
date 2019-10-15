@@ -212,14 +212,12 @@ import java.util.Set;
         paymentMethodIndex = bundle.getInt(BUNDLE_STATE_CURRENT_PM_INDEX);
     }
 
-    @NonNull
     @Override
-    public Bundle storeInBundle(@NonNull final Bundle bundle) {
+    public void storeInBundle(@NonNull final Bundle bundle) {
         bundle.putParcelable(BUNDLE_STATE_PAYER_COST, payerCostSelection);
         bundle.putParcelable(BUNDLE_STATE_SPLIT_PREF, splitSelectionState);
         bundle.putInt(BUNDLE_STATE_AVAILABLE_PM_COUNT, availablePaymentMethodsCount);
         bundle.putInt(BUNDLE_STATE_CURRENT_PM_INDEX, paymentMethodIndex);
-        return bundle;
     }
 
     @Override

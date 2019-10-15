@@ -2,6 +2,7 @@ package com.mercadopago.android.px.internal.viewmodel;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public final class CheckoutStateModel {
 
@@ -22,11 +23,15 @@ public final class CheckoutStateModel {
         bundle.putBoolean(EXTRA_IS_EXPRESS_CHECKOUT, isExpressCheckout);
     }
 
-    public static CheckoutStateModel fromBundle(@NonNull final Bundle bundle) {
-        final CheckoutStateModel stateModel = new CheckoutStateModel();
-        stateModel.paymentMethodEdited = bundle.getBoolean(EXTRA_PM_EDITED);
-        stateModel.isUniquePaymentMethod = bundle.getBoolean(EXTRA_UNIQUE_PM);
-        stateModel.isExpressCheckout = bundle.getBoolean(EXTRA_IS_EXPRESS_CHECKOUT);
-        return stateModel;
+    @NonNull
+    public static CheckoutStateModel fromBundle(@Nullable final Bundle bundle) {
+        if (bundle != null) {
+            final CheckoutStateModel stateModel = new CheckoutStateModel();
+            stateModel.paymentMethodEdited = bundle.getBoolean(EXTRA_PM_EDITED);
+            stateModel.isUniquePaymentMethod = bundle.getBoolean(EXTRA_UNIQUE_PM);
+            stateModel.isExpressCheckout = bundle.getBoolean(EXTRA_IS_EXPRESS_CHECKOUT);
+            return stateModel;
+        }
+        return new CheckoutStateModel();
     }
 }

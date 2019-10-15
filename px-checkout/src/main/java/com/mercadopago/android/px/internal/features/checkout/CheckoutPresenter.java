@@ -1,5 +1,6 @@
 package com.mercadopago.android.px.internal.features.checkout;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
@@ -42,7 +43,6 @@ import java.util.List;
 public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> implements PaymentServiceHandler,
     PostPaymentAction.ActionController, Checkout.Actions {
 
-    @NonNull /* default */ final CheckoutStateModel state;
     @NonNull /* default */ final PaymentRepository paymentRepository;
     @NonNull /* default */ final PaymentSettingRepository paymentSettingRepository;
     @NonNull /* default */ final UserSelectionRepository userSelectionRepository;
@@ -52,9 +52,9 @@ public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> impl
     @NonNull private final PaymentRewardRepository paymentRewardRepository;
     @NonNull private final InternalConfiguration internalConfiguration;
     private transient FailureRecovery failureRecovery;
+    /* default */ CheckoutStateModel state;
 
-    /* default */ CheckoutPresenter(@NonNull final CheckoutStateModel persistentData,
-        @NonNull final PaymentSettingRepository paymentSettingRepository,
+    /* default */ CheckoutPresenter(@NonNull final PaymentSettingRepository paymentSettingRepository,
         @NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final GroupsRepository groupsRepository,
         @NonNull final PluginRepository pluginRepository,
@@ -71,7 +71,6 @@ public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> impl
         this.checkoutPreferenceRepository = checkoutPreferenceRepository;
         this.paymentRewardRepository = paymentRewardRepository;
         this.internalConfiguration = internalConfiguration;
-        state = persistentData;
     }
 
     @NonNull
@@ -80,7 +79,7 @@ public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> impl
     }
 
     @Override
-    public void initialize() {
+    public void onViewAttached(@NonNull final Checkout.View view) {
         getView().showProgress();
         configurePreference();
     }
@@ -512,5 +511,15 @@ public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> impl
     @Override
     public void onChangePaymentMethodFromReviewAndConfirm() {
         onChangePaymentMethod();
+    }
+
+    @Override
+    public void recoverFromBundle(@NonNull final Bundle bundle) {
+        state = CheckoutStateModel.fromBundle(bundle);
+    }
+
+    @Override
+    public void storeInBundle(@NonNull final Bundle bundle) {
+        state.toBundle(bundle);
     }
 }
