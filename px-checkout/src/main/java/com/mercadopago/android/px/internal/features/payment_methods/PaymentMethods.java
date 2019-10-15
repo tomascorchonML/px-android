@@ -28,8 +28,6 @@ import java.util.List;
 
         void setSupportedPaymentTypes(final List<String> supportedPaymentTypes);
 
-        void start();
-
         void recoverFromFailure();
     }
 }

@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.internal.features.payment_methods;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.repository.PaymentMethodsRepository;
@@ -14,7 +14,7 @@ import com.mercadopago.android.px.preferences.PaymentPreference;
 import java.util.ArrayList;
 import java.util.List;
 
-/* default */ class PaymentMethodsPresenterImpl extends BasePresenter<PaymentMethods.View>
+/* default */ class PaymentMethodsPresenter extends AbstractBasePresenter<PaymentMethods.View>
     implements PaymentMethods.Actions {
 
     private boolean showBankDeals;
@@ -24,7 +24,7 @@ import java.util.List;
     @NonNull private final UserSelectionRepository userSelectionRepository;
     @NonNull private final PaymentMethodsRepository paymentMethodsRepository;
 
-    public PaymentMethodsPresenterImpl(@NonNull final UserSelectionRepository userSelectionRepository,
+    public PaymentMethodsPresenter(@NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final PaymentMethodsRepository paymentMethodsRepository) {
         this.userSelectionRepository = userSelectionRepository;
         this.paymentMethodsRepository = paymentMethodsRepository;
@@ -46,11 +46,11 @@ import java.util.List;
     }
 
     @Override
-    public void start() {
+    public void onViewAttached(@NonNull final PaymentMethods.View view) {
         definePaymentMethodsExclusions();
         retrievePaymentMethods();
-        if (showBankDeals && isViewAttached()) {
-            getView().showBankDeals();
+        if (showBankDeals) {
+            view.showBankDeals();
         }
     }
 

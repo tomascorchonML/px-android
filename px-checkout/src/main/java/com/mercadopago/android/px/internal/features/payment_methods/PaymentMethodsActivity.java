@@ -45,8 +45,8 @@ public class PaymentMethodsActivity extends BaseActivity<PaymentMethodsPresenter
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
 
         final Session session = Session.getInstance();
         mPresenter =
@@ -81,11 +81,8 @@ public class PaymentMethodsActivity extends BaseActivity<PaymentMethodsPresenter
     }
 
     protected void onValidStart() {
-        mPresenter.attachView(this);
-
         setContentView();
         initializeControls();
-        mPresenter.start();
     }
 
     protected void onInvalidStart(final String message) {
