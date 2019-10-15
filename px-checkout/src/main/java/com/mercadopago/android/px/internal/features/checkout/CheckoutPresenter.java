@@ -73,11 +73,6 @@ public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> impl
         this.internalConfiguration = internalConfiguration;
     }
 
-    @NonNull
-    public CheckoutStateModel getState() {
-        return state;
-    }
-
     @Override
     public void onViewAttached(@NonNull final Checkout.View view) {
         getView().showProgress();
