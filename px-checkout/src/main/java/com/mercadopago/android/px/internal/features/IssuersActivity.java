@@ -94,8 +94,6 @@ public class IssuersActivity extends BaseActivity<IssuersPresenter> implements I
         super.onPostCreate(savedInstanceState);
         getActivityParameters();
 
-        presenter.attachView(this);
-
         mActivityActive = true;
 
         analyzeLowRes();

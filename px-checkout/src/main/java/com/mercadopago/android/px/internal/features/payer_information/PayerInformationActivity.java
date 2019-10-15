@@ -85,8 +85,8 @@ public class PayerInformationActivity extends BaseActivity<PayerInformationPrese
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         mActivityActive = true;
         analyzeLowRes();
         setContentView();
@@ -98,7 +98,6 @@ public class PayerInformationActivity extends BaseActivity<PayerInformationPrese
                 session.getConfigurationModule().getPaymentSettings(),
                 session.getIdentificationRepository(),
                 session.getConfigurationModule().getUserSelectionRepository().getPaymentMethod());
-        presenter.attachView(this);
         mErrorState = NORMAL_STATE;
         setListeners();
     }
