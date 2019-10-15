@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.addons.ESCManagerBehaviour;
-import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
@@ -28,7 +28,7 @@ import com.mercadopago.android.px.tracking.internal.events.EscFrictionEventTrack
 import com.mercadopago.android.px.tracking.internal.model.Reason;
 import java.util.List;
 
-/* default */ class CardVaultPresenterImpl extends BasePresenter<CardVault.View> implements CardVault.Actions {
+/* default */ class CardVaultPresenter extends AbstractBasePresenter<CardVault.View> implements CardVault.Actions {
 
     @NonNull private final ESCManagerBehaviour escManagerBehaviour;
     @NonNull private final AmountConfigurationRepository amountConfigurationRepository;
@@ -55,7 +55,7 @@ import java.util.List;
     //Security Code
     @Nullable /* default */ String esc;
 
-    public CardVaultPresenterImpl(@NonNull final UserSelectionRepository userSelectionRepository,
+    public CardVaultPresenter(@NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final PaymentSettingRepository paymentSettingRepository,
         @NonNull final ESCManagerBehaviour escManagerBehaviour,
         @NonNull final AmountConfigurationRepository amountConfigurationRepository,

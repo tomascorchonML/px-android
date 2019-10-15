@@ -20,8 +20,8 @@ public class CardAssociationResultSuccessActivity extends BaseActivity {
     }
 
     @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onPostCreate(@Nullable final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
 
         setContentView(R.layout.px_card_association_result_success);
 

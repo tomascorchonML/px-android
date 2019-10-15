@@ -28,8 +28,8 @@ public class CardAssociationResultErrorActivity extends BaseActivity {
     }
 
     @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onPostCreate(@Nullable final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
 
         final Intent intent = getIntent();
         accessToken = intent.getStringExtra(PARAM_ACCESS_TOKEN);

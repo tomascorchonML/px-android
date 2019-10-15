@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.core.internal.MercadoPagoCardStorage;
-import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.internal.di.CardAssociationSession;
@@ -49,7 +49,7 @@ import java.util.List;
 
 import static com.mercadopago.android.px.model.Card.CARD_DEFAULT_SECURITY_CODE_LENGTH;
 
-public abstract class GuessingCardPresenterImpl extends BasePresenter<GuessingCard.View>
+public abstract class GuessingCardPresenter extends AbstractBasePresenter<GuessingCard.View>
     implements GuessingCard.Actions {
 
     protected static final String CARD_SIDE_STATE_BUNDLE = "cardSideState";
@@ -100,7 +100,7 @@ public abstract class GuessingCardPresenterImpl extends BasePresenter<GuessingCa
     private FailureRecovery failureRecovery;
     private String securityCode;
 
-    public GuessingCardPresenterImpl() {
+    public GuessingCardPresenter() {
         cardToken = CardToken.createEmpty();
         token = new Token();
         identification = new Identification();

@@ -27,12 +27,12 @@ public class ErrorActivity extends BaseActivity {
     private String message;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         animateErrorScreenLaunch();
         setContentView(R.layout.px_activity_error);
         error = Session.getInstance().getJsonUtil()
-                .fromJson(getIntent().getStringExtra(EXTRA_ERROR), MercadoPagoError.class);
+            .fromJson(getIntent().getStringExtra(EXTRA_ERROR), MercadoPagoError.class);
         if (error != null) {
             initializeControls();
             fillData();

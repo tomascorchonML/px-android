@@ -35,7 +35,7 @@ import com.mercadopago.android.px.services.Callback;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class GuessingCardPaymentPresenterImpl extends GuessingCardPresenter {
+public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
 
     @NonNull /* default */ final PaymentSettingRepository paymentSettingRepository;
     @NonNull /* default */ final UserSelectionRepository userSelectionRepository;
@@ -50,7 +50,7 @@ public class GuessingCardPaymentPresenterImpl extends GuessingCardPresenter {
 
     protected PaymentRecovery paymentRecovery;
 
-    public GuessingCardPaymentPresenterImpl(@NonNull final UserSelectionRepository userSelectionRepository,
+    public GuessingCardPaymentPresenter(@NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final PaymentSettingRepository paymentSettingRepository,
         @NonNull final GroupsRepository groupsRepository,
         @NonNull final IssuersRepository issuersRepository,

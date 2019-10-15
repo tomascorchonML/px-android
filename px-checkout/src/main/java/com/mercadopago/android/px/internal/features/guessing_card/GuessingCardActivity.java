@@ -213,8 +213,9 @@ public class GuessingCardActivity extends BaseActivity<GuessingCardPresenter> im
     @Override
     protected void onDestroy() {
         mActivityActive = false;
-        if(presenter!=null)
-        presenter.detachView();
+        if (presenter != null) {
+            presenter.detachView();
+        }
         super.onDestroy();
     }
 

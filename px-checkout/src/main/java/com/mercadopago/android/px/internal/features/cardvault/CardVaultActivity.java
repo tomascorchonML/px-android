@@ -94,8 +94,9 @@ public class CardVaultActivity extends BaseActivity<CardVaultPresenter> implemen
 
     @Override
     protected void onDestroy() {
-        if(presenter!=null)
-        presenter.detachView();
+        if (presenter != null) {
+            presenter.detachView();
+        }
         super.onDestroy();
     }
 
