@@ -5,7 +5,7 @@ import com.mercadopago.android.px.addons.ESCManagerBehaviour;
 import com.mercadopago.android.px.addons.model.SecurityValidationData;
 import com.mercadopago.android.px.configuration.DynamicDialogConfiguration;
 import com.mercadopago.android.px.core.DynamicDialogCreator;
-import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.core.ProductIdProvider;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecoratorMapper;
@@ -36,7 +36,7 @@ import com.mercadopago.android.px.tracking.internal.events.FrictionEventTracker;
 import com.mercadopago.android.px.tracking.internal.views.ReviewAndConfirmViewTracker;
 import java.util.Set;
 
-/* default */ final class ReviewAndConfirmPresenterImpl extends BasePresenter<ReviewAndConfirm.View>
+/* default */ final class ReviewAndConfirmPresenter extends AbstractBasePresenter<ReviewAndConfirm.View>
     implements ReviewAndConfirm.Action {
 
     @NonNull private final PaymentSettingRepository paymentSettings;
@@ -50,7 +50,7 @@ import java.util.Set;
     private final PayButtonViewModel payButtonViewModel;
     private FailureRecovery recovery;
 
-    /* default */ ReviewAndConfirmPresenterImpl(@NonNull final PaymentRepository paymentRepository,
+    /* default */ ReviewAndConfirmPresenter(@NonNull final PaymentRepository paymentRepository,
         @NonNull final DiscountRepository discountRepository,
         @NonNull final PaymentSettingRepository paymentSettings,
         @NonNull final UserSelectionRepository userSelectionRepository,
@@ -74,10 +74,14 @@ import java.util.Set;
     }
 
     @Override
-    public void attachView(final ReviewAndConfirm.View view) {
-        super.attachView(view);
+    public void onViewAttached(@NonNull final ReviewAndConfirm.View view) {
         paymentRepository.attach(this);
         view.setPayButtonText(payButtonViewModel);
+    }
+
+    @Override
+    public void onViewDetached() {
+        paymentRepository.detach(this);
     }
 
     @Override
@@ -130,12 +134,6 @@ import java.util.Set;
         if (dynamicDialogConfiguration.hasCreatorFor(location)) {
             getView().showDynamicDialog(dynamicDialogConfiguration.getCreatorFor(location), checkoutData);
         }
-    }
-
-    @Override
-    public void detachView() {
-        paymentRepository.detach(this);
-        super.detachView();
     }
 
     @Override
