@@ -26,7 +26,7 @@ import com.mercadopago.android.px.addons.model.SecurityValidationData;
 import com.mercadopago.android.px.configuration.AdvancedConfiguration;
 import com.mercadopago.android.px.configuration.ReviewAndConfirmConfiguration;
 import com.mercadopago.android.px.core.DynamicDialogCreator;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.business_result.BusinessPaymentResultActivity;
@@ -75,7 +75,7 @@ import static com.mercadopago.android.px.internal.features.Constants.RESULT_CHAN
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_ERROR;
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_SILENT_ERROR;
 
-public final class ReviewAndConfirmActivity extends PXActivity<ReviewAndConfirmPresenter> implements
+public final class ReviewAndConfirmActivity extends BaseActivity<ReviewAndConfirmPresenter> implements
     ReviewAndConfirm.View, ActionDispatcher, ExplodingFragment.ExplodingAnimationListener {
 
     private static final int REQ_CODE_CARD_VAULT = 1;

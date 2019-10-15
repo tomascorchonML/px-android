@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.controllers.CheckoutTimer;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
@@ -41,7 +41,7 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class InstallmentsActivity extends PXActivity<InstallmentsPresenter> implements InstallmentsView {
+public class InstallmentsActivity extends BaseActivity<InstallmentsPresenter> implements InstallmentsView {
 
     private static final int TOOLBAR_TEXT_SIZE = 19;
     private static final int TIMER_TEXT_SIZE = 17;

@@ -44,13 +44,6 @@ public abstract class PaymentMethodFragment extends Fragment implements PaymentM
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         badge = view.findViewById(R.id.px_disabled_badge);
         card = view.findViewById(R.id.payment_method);
-        presenter.attachView(this);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        presenter.detachView();
     }
 
     @Override

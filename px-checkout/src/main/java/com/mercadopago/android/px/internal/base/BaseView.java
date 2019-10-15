@@ -7,5 +7,5 @@ package com.mercadopago.android.px.internal.base;
  * See also {@link BasePresenter}
  */
 
-public interface MvpView {
+public interface BaseView {
 }

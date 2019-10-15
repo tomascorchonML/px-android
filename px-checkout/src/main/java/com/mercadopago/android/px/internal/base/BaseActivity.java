@@ -1,23 +1,31 @@
 package com.mercadopago.android.px.internal.base;
 
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.internal.di.Session;
 
-public abstract class PXActivity<P extends BasePresenter> extends AppCompatActivity implements MvpView {
-
-    protected static final String BUNDLE_CREATED = "bundle_created";
+public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity
+    implements BaseView {
 
     protected P presenter;
 
     @Override
-    protected void onCreate(@Nullable final Bundle savedInstanceState) {
+    protected final void onCreate(@Nullable final Bundle savedInstanceState) {
         Log.d("PRUEBA", "ON CREATE " + getClass().getSimpleName());
         super.onCreate(savedInstanceState);
-        new LoggingExceptionHandler(this);
+        if (!Session.getInstance().isInitialized()) {
+            finish();
+            Log.d("PRUEBA", "NOT INITED");
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable final Bundle savedInstanceState) {
+        Log.d("PRUEBA", "ON POST CREATE " + getClass().getSimpleName());
+        super.onPostCreate(savedInstanceState);
     }
 
     @Override
@@ -28,6 +36,7 @@ public abstract class PXActivity<P extends BasePresenter> extends AppCompatActiv
 
     @Override
     protected void onStart() {
+        presenter.attachView(this);
         Log.d("PRUEBA", "ON START " + getClass().getSimpleName());
         super.onStart();
     }
@@ -41,6 +50,7 @@ public abstract class PXActivity<P extends BasePresenter> extends AppCompatActiv
     @Override
     protected void onStop() {
         Log.d("PRUEBA", "ON STOP " + getClass().getSimpleName());
+        presenter.detachView();
         super.onStop();
     }
 
@@ -50,19 +60,10 @@ public abstract class PXActivity<P extends BasePresenter> extends AppCompatActiv
         super.onDestroy();
     }
 
-    @CallSuper
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(BUNDLE_CREATED, true);
-    }
-
     @Override
     public void onBackPressed() {
-        if (presenter != null) {
-            presenter.tracker.trackBack();
-        }
         super.onBackPressed();
+        presenter.onBackPressed();
     }
 
     public void overrideTransitionIn() {

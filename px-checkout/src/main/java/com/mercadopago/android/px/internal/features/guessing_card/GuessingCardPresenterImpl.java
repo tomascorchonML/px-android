@@ -49,7 +49,7 @@ import java.util.List;
 
 import static com.mercadopago.android.px.model.Card.CARD_DEFAULT_SECURITY_CODE_LENGTH;
 
-public abstract class GuessingCardPresenter extends BasePresenter<GuessingCard.View>
+public abstract class GuessingCardPresenterImpl extends BasePresenter<GuessingCard.View>
     implements GuessingCard.Actions {
 
     protected static final String CARD_SIDE_STATE_BUNDLE = "cardSideState";
@@ -100,7 +100,7 @@ public abstract class GuessingCardPresenter extends BasePresenter<GuessingCard.V
     private FailureRecovery failureRecovery;
     private String securityCode;
 
-    public GuessingCardPresenter() {
+    public GuessingCardPresenterImpl() {
         cardToken = CardToken.createEmpty();
         token = new Token();
         identification = new Identification();

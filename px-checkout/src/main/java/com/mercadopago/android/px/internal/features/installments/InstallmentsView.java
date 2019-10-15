@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.internal.features.installments;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.model.DiscountConfigurationModel;
 import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.Site;
@@ -9,7 +9,7 @@ import com.mercadopago.android.px.model.exceptions.ApiException;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface InstallmentsView extends MvpView {
+public interface InstallmentsView extends BaseView {
 
     void showApiErrorScreen(final ApiException apiException, final String requestOrigin);
 

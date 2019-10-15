@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.internal.features.bank_deals;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
@@ -9,7 +9,7 @@ import java.util.List;
 
 /* default */ interface BankDeals {
 
-    /* default */ interface View extends MvpView {
+    /* default */ interface View extends BaseView {
         void showBankDealDetail(@NonNull final BankDeal bankDeal);
 
         void showApiExceptionError(@NonNull final MercadoPagoError error);

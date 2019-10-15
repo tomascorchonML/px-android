@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.ReviewPaymentMethodsAdapter;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.util.ErrorUtil;
 import com.mercadopago.android.px.internal.util.JsonUtil;
 import com.mercadopago.android.px.model.PaymentMethod;
@@ -21,7 +21,7 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class ReviewPaymentMethodsActivity extends PXActivity<ReviewPaymentMethodsPresenter>
+public class ReviewPaymentMethodsActivity extends BaseActivity<ReviewPaymentMethodsPresenter>
     implements ReviewPaymentMethods.View {
 
     private static final String EXTRA_PAYMENT_METHODS = "EXTRA_PAYMENT_METHODS";

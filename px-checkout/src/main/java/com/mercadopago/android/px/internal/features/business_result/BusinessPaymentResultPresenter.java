@@ -2,7 +2,7 @@ package com.mercadopago.android.px.internal.features.business_result;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.view.ActionDispatcher;
 import com.mercadopago.android.px.internal.view.BusinessActions;
@@ -21,7 +21,7 @@ import com.mercadopago.android.px.tracking.internal.events.SecondaryActionEvent;
 import com.mercadopago.android.px.tracking.internal.events.SeeAllDiscountsEvent;
 import com.mercadopago.android.px.tracking.internal.views.ResultViewTrack;
 
-/* default */ class BusinessPaymentResultPresenter extends BasePresenter<BusinessPaymentResultContract.View>
+/* default */ class BusinessPaymentResultPresenter extends AbstractBasePresenter<BusinessPaymentResultContract.View>
     implements ActionDispatcher, BusinessPaymentResultContract.Presenter, BusinessActions {
 
     private final BusinessPaymentModel model;
@@ -35,8 +35,8 @@ import com.mercadopago.android.px.tracking.internal.views.ResultViewTrack;
     }
 
     @Override
-    public void attachView(final BusinessPaymentResultContract.View view) {
-        super.attachView(view);
+    public void onViewAttached(@NonNull final BusinessPaymentResultContract.View view) {
+        super.onViewAttached(view);
         mapPaymentModel();
     }
 

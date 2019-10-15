@@ -2,6 +2,7 @@ package com.mercadopago.android.px.internal.features.express.add_new_card;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.repository.GroupsRepository;
 import com.mercadopago.android.px.model.PaymentMethodSearch;
@@ -10,7 +11,7 @@ import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.services.Callback;
 import java.util.List;
 
-public class AddNewCardPresenter extends BasePresenter<AddNewCard.View> implements AddNewCard.Actions {
+public class AddNewCardPresenter extends AbstractBasePresenter<AddNewCard.View> implements AddNewCard.Actions {
 
     private static final String TYPE_TO_DRIVE = "cards";
 

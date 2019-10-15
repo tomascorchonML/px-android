@@ -18,7 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import com.mercadolibre.android.ui.widgets.MeliSnackbar;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.payment_result.components.PaymentResultLegacyRenderer;
 import com.mercadopago.android.px.internal.features.payment_result.viewmodel.PaymentResultViewModel;
@@ -36,7 +36,7 @@ import static com.mercadopago.android.px.internal.features.Constants.RESULT_ACTI
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_CUSTOM_EXIT;
 import static com.mercadopago.android.px.internal.util.MercadoPagoUtil.getSafeIntent;
 
-public class PaymentResultActivity extends PXActivity<PaymentResultPresenter> implements
+public class PaymentResultActivity extends BaseActivity<PaymentResultPresenter> implements
     PaymentResultContract.View {
 
     private static final int CONGRATS_REQUEST_CODE = 16;

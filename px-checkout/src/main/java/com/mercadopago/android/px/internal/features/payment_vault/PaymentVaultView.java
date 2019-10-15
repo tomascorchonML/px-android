@@ -3,9 +3,8 @@ package com.mercadopago.android.px.internal.features.payment_vault;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.viewmodel.PaymentMethodViewModel;
-import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.DiscountConfigurationModel;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentMethodSearchItem;
@@ -15,7 +14,7 @@ import com.mercadopago.android.px.preferences.PaymentPreference;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface PaymentVaultView extends MvpView {
+public interface PaymentVaultView extends BaseView {
 
     void showSelectedItem(PaymentMethodSearchItem item);
 

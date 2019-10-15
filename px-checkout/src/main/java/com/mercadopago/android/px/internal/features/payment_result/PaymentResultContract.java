@@ -2,14 +2,14 @@ package com.mercadopago.android.px.internal.features.payment_result;
 
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.features.payment_result.viewmodel.PaymentResultViewModel;
 import com.mercadopago.android.px.internal.view.BusinessActions;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 
 public interface PaymentResultContract {
 
-    interface View extends MvpView {
+    interface View extends BaseView {
 
         void configureViews(@NonNull final PaymentResultViewModel model, @NonNull final BusinessActions callback);
 

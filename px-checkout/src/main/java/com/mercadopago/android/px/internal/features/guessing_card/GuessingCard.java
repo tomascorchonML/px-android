@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.internal.features.guessing_card;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.controllers.PaymentMethodGuessingController;
 import com.mercadopago.android.px.model.CardInfo;
 import com.mercadopago.android.px.model.IdentificationType;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface GuessingCard {
 
-    interface View extends MvpView {
+    interface View extends BaseView {
         void onValidStart();
 
         void showError(MercadoPagoError error, String requestOrigin);

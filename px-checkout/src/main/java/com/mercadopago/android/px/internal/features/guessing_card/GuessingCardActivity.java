@@ -31,7 +31,7 @@ import android.widget.TextView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.core.internal.MercadoPagoCardStorage;
 import com.mercadopago.android.px.internal.adapters.IdentificationTypesAdapter;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.callbacks.PaymentMethodSelectionCallback;
 import com.mercadopago.android.px.internal.callbacks.card.CardExpiryDateEditTextCallback;
 import com.mercadopago.android.px.internal.callbacks.card.CardIdentificationNumberEditTextCallback;
@@ -82,7 +82,7 @@ import java.util.List;
 
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_SILENT_ERROR;
 
-public class GuessingCardActivity extends PXActivity<GuessingCardPresenter> implements
+public class GuessingCardActivity extends BaseActivity<GuessingCardPresenter> implements
     CardExpiryDateEditTextCallback, View.OnTouchListener, View.OnClickListener, GuessingCard.View {
 
     private static final int REQ_CODE_ISSUERS = 3;
@@ -195,8 +195,8 @@ public class GuessingCardActivity extends PXActivity<GuessingCardPresenter> impl
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         mActivityActive = true;
         mButtonContainerMustBeShown = true;
         analizeLowRes();
@@ -213,6 +213,7 @@ public class GuessingCardActivity extends PXActivity<GuessingCardPresenter> impl
     @Override
     protected void onDestroy() {
         mActivityActive = false;
+        if(presenter!=null)
         presenter.detachView();
         super.onDestroy();
     }

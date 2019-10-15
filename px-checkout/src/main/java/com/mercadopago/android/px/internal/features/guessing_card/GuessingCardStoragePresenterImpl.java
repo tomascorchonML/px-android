@@ -27,7 +27,7 @@ import static com.mercadopago.android.px.internal.util.ApiUtil.RequestOrigin.CRE
 import static com.mercadopago.android.px.internal.util.ApiUtil.RequestOrigin.GET_CARD_PAYMENT_METHODS;
 import static com.mercadopago.android.px.internal.util.ApiUtil.RequestOrigin.GET_ISSUERS;
 
-public class GuessingCardStoragePresenter extends GuessingCardPresenter {
+public class GuessingCardStoragePresenterImpl extends GuessingCardPresenter {
 
     /* default */ final ESCManagerBehaviour escManagerBehaviour;
     private final MercadoPagoCardStorage mercadoPagoCardStorage;
@@ -39,7 +39,7 @@ public class GuessingCardStoragePresenter extends GuessingCardPresenter {
     @Nullable
     private PaymentMethod currentPaymentMethod;
 
-    public GuessingCardStoragePresenter(@NonNull final MercadoPagoCardStorage mercadoPagoCardStorage,
+    public GuessingCardStoragePresenterImpl(@NonNull final MercadoPagoCardStorage mercadoPagoCardStorage,
         final CardPaymentMethodRepository cardPaymentMethodRepository,
         final IdentificationRepository identificationRepository,
         final CardAssociationService cardAssociationService,

@@ -3,8 +3,8 @@ package com.mercadopago.android.px.internal.features.business_result;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.view.BusinessActions;
 import com.mercadopago.android.px.internal.view.PaymentResultBody;
@@ -24,7 +24,7 @@ import com.mercadopago.android.px.model.ExitAction;
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_CUSTOM_EXIT;
 import static com.mercadopago.android.px.internal.util.MercadoPagoUtil.getSafeIntent;
 
-public class BusinessPaymentResultActivity extends PXActivity<BusinessPaymentResultPresenter>
+public class BusinessPaymentResultActivity extends BaseActivity<BusinessPaymentResultPresenter>
     implements BusinessPaymentResultContract.View {
 
     private static final String EXTRA_BUSINESS_PAYMENT_MODEL = "extra_business_payment_model";
@@ -37,12 +37,11 @@ public class BusinessPaymentResultActivity extends PXActivity<BusinessPaymentRes
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         setContentView(R.layout.px_activity_payment_result);
 
         presenter = createPresenter();
-        presenter.attachView(this);
         if (savedInstanceState == null) {
             presenter.onFreshStart();
         }
@@ -70,12 +69,6 @@ public class BusinessPaymentResultActivity extends PXActivity<BusinessPaymentRes
     @Override
     public void onBackPressed() {
         presenter.onAbort();
-    }
-
-    @Override
-    protected void onDestroy() {
-        presenter.detachView();
-        super.onDestroy();
     }
 
     @Override

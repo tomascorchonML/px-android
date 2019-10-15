@@ -1,12 +1,12 @@
 package com.mercadopago.android.px.internal.features;
 
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.model.Issuer;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.util.List;
 
-public interface IssuersActivityView extends MvpView {
+public interface IssuersActivityView extends BaseView {
 
     void showIssuers(List<Issuer> issuersList, OnSelectedCallback<Integer> onSelectedCallback);
 

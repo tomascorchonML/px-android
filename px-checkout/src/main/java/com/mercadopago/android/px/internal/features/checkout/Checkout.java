@@ -2,7 +2,7 @@ package com.mercadopago.android.px.internal.features.checkout;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.viewmodel.BusinessPaymentModel;
 import com.mercadopago.android.px.internal.viewmodel.PaymentModel;
@@ -14,7 +14,7 @@ import com.mercadopago.android.px.model.exceptions.CheckoutPreferenceException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 
 /* default */ interface Checkout {
-    /* default */ interface View extends MvpView {
+    /* default */ interface View extends BaseView {
         void startExpressPaymentRecoveryFlow(@NonNull final PaymentRecovery paymentRecovery);
 
         void showError(final MercadoPagoError error);

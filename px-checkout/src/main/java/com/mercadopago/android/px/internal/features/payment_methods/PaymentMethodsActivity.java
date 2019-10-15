@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.PaymentMethodsAdapter;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.bank_deals.BankDealsActivity;
 import com.mercadopago.android.px.internal.util.ErrorUtil;
@@ -25,7 +25,7 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.PaymentPreference;
 import java.util.List;
 
-public class PaymentMethodsActivity extends PXActivity<PaymentMethodsPresenter> implements PaymentMethods.View {
+public class PaymentMethodsActivity extends BaseActivity<PaymentMethodsPresenter> implements PaymentMethods.View {
 
     private static final String EXTRA_PAYMENT_PREFERENCE = "paymentPreference";
 

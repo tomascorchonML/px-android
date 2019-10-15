@@ -3,7 +3,7 @@ package com.mercadopago.android.px.internal.features.review_and_confirm;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.addons.model.SecurityValidationData;
 import com.mercadopago.android.px.core.DynamicDialogCreator;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecorator;
 import com.mercadopago.android.px.internal.viewmodel.BusinessPaymentModel;
@@ -16,7 +16,7 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 
 public interface ReviewAndConfirm {
 
-    interface View extends MvpView {
+    interface View extends BaseView {
 
         void showCardCVVRequired(@NonNull final Card card);
 

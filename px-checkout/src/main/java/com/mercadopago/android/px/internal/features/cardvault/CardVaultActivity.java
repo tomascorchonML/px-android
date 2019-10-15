@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.IssuersActivity;
 import com.mercadopago.android.px.internal.features.SecurityCodeActivity;
@@ -31,7 +31,7 @@ import java.util.List;
 
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_SILENT_ERROR;
 
-public class CardVaultActivity extends PXActivity<CardVaultPresenter> implements CardVault.View {
+public class CardVaultActivity extends BaseActivity<CardVaultPresenter> implements CardVault.View {
 
     private static final int REQ_CODE_INSTALLMENTS = 2;
     private static final int REQ_CODE_ISSUERS = 3;
@@ -79,8 +79,8 @@ public class CardVaultActivity extends PXActivity<CardVaultPresenter> implements
     }
 
     @Override
-    protected void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(@Nullable final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         setContentView(R.layout.px_activity_card_vault);
         configure();
 
@@ -94,6 +94,7 @@ public class CardVaultActivity extends PXActivity<CardVaultPresenter> implements
 
     @Override
     protected void onDestroy() {
+        if(presenter!=null)
         presenter.detachView();
         super.onDestroy();
     }

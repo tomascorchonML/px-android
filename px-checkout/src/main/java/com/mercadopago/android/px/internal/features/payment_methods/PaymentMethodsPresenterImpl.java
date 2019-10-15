@@ -14,7 +14,7 @@ import com.mercadopago.android.px.preferences.PaymentPreference;
 import java.util.ArrayList;
 import java.util.List;
 
-/* default */ class PaymentMethodsPresenter extends BasePresenter<PaymentMethods.View>
+/* default */ class PaymentMethodsPresenterImpl extends BasePresenter<PaymentMethods.View>
     implements PaymentMethods.Actions {
 
     private boolean showBankDeals;
@@ -24,7 +24,7 @@ import java.util.List;
     @NonNull private final UserSelectionRepository userSelectionRepository;
     @NonNull private final PaymentMethodsRepository paymentMethodsRepository;
 
-    public PaymentMethodsPresenter(@NonNull final UserSelectionRepository userSelectionRepository,
+    public PaymentMethodsPresenterImpl(@NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final PaymentMethodsRepository paymentMethodsRepository) {
         this.userSelectionRepository = userSelectionRepository;
         this.paymentMethodsRepository = paymentMethodsRepository;

@@ -1,6 +1,6 @@
 package com.mercadopago.android.px.internal.features.payment_methods;
 
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.PaymentPreference;
@@ -8,7 +8,7 @@ import java.util.List;
 
 /* default */ interface PaymentMethods {
 
-    /* default */ interface View extends MvpView {
+    /* default */ interface View extends BaseView {
         void showPaymentMethods(final List<PaymentMethod> paymentMethods);
 
         void showProgress();

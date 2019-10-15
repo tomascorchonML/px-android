@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
@@ -24,7 +25,7 @@ import com.mercadopago.android.px.tracking.internal.views.LastNameViewTracker;
 import com.mercadopago.android.px.tracking.internal.views.NameViewTracker;
 import java.util.List;
 
-/* default */ class PayerInformationPresenter extends BasePresenter<PayerInformation.View>
+/* default */ class PayerInformationPresenter extends AbstractBasePresenter<PayerInformation.View>
     implements PayerInformation.Actions {
 
     @NonNull /* default */ final PayerInformationStateModel state;
@@ -52,9 +53,7 @@ import java.util.List;
     }
 
     @Override
-    public void attachView(final PayerInformation.View view) {
-        super.attachView(view);
-
+    public void onViewAttached(@NonNull final PayerInformation.View view) {
         if (state.hasIdentificationTypes()) {
             view.hideProgressBar();
         } else {
@@ -309,7 +308,7 @@ import java.util.List;
 
     @Override
     public void onBackPressed() {
-        tracker.trackBack();
+        super.onBackPressed();
         switch (state.getCurrentFocusType()) {
         case PayerInformationFocus.NAME_INPUT:
         case PayerInformationFocus.BUSINESS_NAME_INPUT:

@@ -2,13 +2,14 @@ package com.mercadopago.android.px.internal.features.business_result;
 
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.view.BusinessActions;
 import com.mercadopago.android.px.model.ExitAction;
 
 /* default */ interface BusinessPaymentResultContract {
 
-    /* default */ interface View extends MvpView {
+    /* default */ interface View extends BaseView {
         void configureViews(@NonNull final BusinessPaymentResultViewModel model,
             @NonNull final BusinessActions callback);
 
@@ -22,7 +23,7 @@ import com.mercadopago.android.px.model.ExitAction;
         void processCrossSellingBusinessAction(@NonNull final String deepLink);
     }
 
-    /* default */ interface Presenter {
+    /* default */ interface Presenter extends BasePresenter<View> {
         void onFreshStart();
 
         void onAbort();

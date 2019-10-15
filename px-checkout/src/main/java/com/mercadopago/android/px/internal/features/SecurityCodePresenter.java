@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.addons.ESCManagerBehaviour;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
@@ -27,7 +28,8 @@ import com.mercadopago.android.px.tracking.internal.events.FrictionEventTracker;
 import com.mercadopago.android.px.tracking.internal.model.Reason;
 import com.mercadopago.android.px.tracking.internal.views.CvvAskViewTracker;
 
-public class SecurityCodePresenter extends BasePresenter<SecurityCodeActivityView> implements SecurityCode.Actions {
+public class SecurityCodePresenter extends AbstractBasePresenter<SecurityCodeActivityView>
+    implements SecurityCode.Actions {
 
     private static final String BUNDLE_REASON = "BUNDLE_REASON";
 

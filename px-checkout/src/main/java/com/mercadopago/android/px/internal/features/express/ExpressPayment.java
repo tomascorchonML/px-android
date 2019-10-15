@@ -3,7 +3,7 @@ package com.mercadopago.android.px.internal.features.express;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.addons.model.SecurityValidationData;
 import com.mercadopago.android.px.core.DynamicDialogCreator;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecorator;
 import com.mercadopago.android.px.internal.features.express.slider.HubAdapter;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public interface ExpressPayment {
 
-    interface View extends MvpView {
+    interface View extends BaseView {
 
         void configureAdapters(@NonNull List<DrawableFragmentItem> items, @NonNull final Site site, @NonNull HubAdapter
             .Model paymentMethodViewModel);

@@ -14,7 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.PaymentMethodSearchItemAdapter;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.controllers.CheckoutTimer;
 import com.mercadopago.android.px.internal.datasource.PaymentVaultTitleSolverImpl;
 import com.mercadopago.android.px.internal.di.Session;
@@ -51,7 +51,7 @@ import java.util.List;
 import static com.mercadopago.android.px.core.MercadoPagoCheckout.EXTRA_ERROR;
 import static com.mercadopago.android.px.internal.features.Constants.RESULT_SILENT_ERROR;
 
-public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> implements PaymentVaultView {
+public class PaymentVaultActivity extends BaseActivity<PaymentVaultPresenter> implements PaymentVaultView {
 
     public static final int COLUMN_SPACING_DP_VALUE = 20;
     public static final int COLUMNS = 2;
@@ -94,8 +94,8 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         final Session session = Session.getInstance();
         final PaymentSettingRepository configuration = session.getConfigurationModule().getPaymentSettings();
         presenter = new PaymentVaultPresenter(configuration,
@@ -399,6 +399,7 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
     @Override
     protected void onDestroy() {
         mActivityActive = false;
+        if(presenter != null)
         presenter.detachView();
         super.onDestroy();
     }

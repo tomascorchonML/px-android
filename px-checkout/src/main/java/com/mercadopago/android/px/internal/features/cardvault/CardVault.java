@@ -3,7 +3,7 @@ package com.mercadopago.android.px.internal.features.cardvault;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.CardInfo;
@@ -18,7 +18,7 @@ import java.util.List;
 
 /* default */  interface CardVault {
 
-    /* default */  interface View extends MvpView {
+    /* default */  interface View extends BaseView {
 
         void finishWithResult();
 

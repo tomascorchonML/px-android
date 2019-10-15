@@ -12,10 +12,10 @@ import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.tracking.internal.views.TermsAndConditionsViewTracker;
 
-public class TermsAndConditionsActivity extends PXActivity {
+public class TermsAndConditionsActivity extends BaseActivity {
 
     public static final String EXTRA_DATA = "extra_data";
 

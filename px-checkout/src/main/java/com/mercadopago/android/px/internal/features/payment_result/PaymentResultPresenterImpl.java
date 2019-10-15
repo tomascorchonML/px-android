@@ -34,7 +34,7 @@ import com.mercadopago.android.px.tracking.internal.events.SeeAllDiscountsEvent;
 import com.mercadopago.android.px.tracking.internal.views.ResultViewTrack;
 import java.util.List;
 
-/* default */ class PaymentResultPresenter extends BasePresenter<PaymentResultContract.View>
+/* default */ class PaymentResultPresenterImpl extends BasePresenter<PaymentResultContract.View>
     implements ActionDispatcher, PaymentResultContract.Presenter, BusinessActions {
 
     private final PaymentModel paymentModel;
@@ -44,7 +44,7 @@ import java.util.List;
 
     private FailureRecovery failureRecovery;
 
-    /* default */ PaymentResultPresenter(@NonNull final PaymentSettingRepository paymentSettings,
+    /* default */ PaymentResultPresenterImpl(@NonNull final PaymentSettingRepository paymentSettings,
         @NonNull final InstructionsRepository instructionsRepository, @NonNull final PaymentModel paymentModel) {
         this.paymentModel = paymentModel;
         this.instructionsRepository = instructionsRepository;

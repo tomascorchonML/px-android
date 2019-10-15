@@ -12,13 +12,13 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.tracking.internal.views.BankDealsViewTracker;
 import java.util.List;
 
-/* default */ class BankDealsPresenter extends BasePresenter<BankDeals.View>
+/* default */ class BankDealsPresenterImpl extends BasePresenter<BankDeals.View>
     implements BankDeals.Actions, OnSelectedCallback<BankDeal> {
 
     private FailureRecovery failureRecovery;
     private BankDealsRepository bankDealsRepository;
 
-    /* package */ BankDealsPresenter(final BankDealsRepository bankDealsRepository) {
+    /* package */ BankDealsPresenterImpl(final BankDealsRepository bankDealsRepository) {
         this.bankDealsRepository = bankDealsRepository;
     }
 

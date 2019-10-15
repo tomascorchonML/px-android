@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.BankDealsAdapter;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.bank_deal_detail.BankDealDetailActivity;
@@ -22,7 +22,7 @@ import com.mercadopago.android.px.model.BankDeal;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.util.List;
 
-public class BankDealsActivity extends PXActivity<BankDealsPresenter> implements BankDeals.View {
+public class BankDealsActivity extends BaseActivity<BankDealsPresenter> implements BankDeals.View {
 
     public static void start(@NonNull final Activity activity) {
         final Intent intent = new Intent(activity, BankDealsActivity.class);

@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.PaymentTypesAdapter;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.internal.callbacks.RecyclerItemClickListener;
 import com.mercadopago.android.px.internal.controllers.CheckoutTimer;
@@ -33,7 +33,7 @@ import com.mercadopago.android.px.model.exceptions.ApiException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentTypesActivity extends PXActivity implements PaymentTypesActivityView {
+public class PaymentTypesActivity extends BaseActivity implements PaymentTypesActivityView {
 
     private static final String EXTRA_PAYMENT_METHODS = "paymentMethods";
     private static final String EXTRA_PAYMENT_TYPES = "paymentTypes";
@@ -70,8 +70,8 @@ public class PaymentTypesActivity extends PXActivity implements PaymentTypesActi
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         if (mPresenter == null) {
             mPresenter = new PaymentTypesPresenter();
         }

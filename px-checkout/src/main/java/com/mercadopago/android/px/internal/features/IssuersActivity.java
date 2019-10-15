@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.IssuersAdapter;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.internal.callbacks.RecyclerItemClickListener;
 import com.mercadopago.android.px.internal.controllers.CheckoutTimer;
@@ -36,7 +36,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IssuersActivity extends PXActivity<IssuersPresenter> implements IssuersActivityView {
+public class IssuersActivity extends BaseActivity<IssuersPresenter> implements IssuersActivityView {
 
     private static final String EXTRA_ISSUERS = "issuers";
     private static final String EXTRA_ISSUER_ID = "issuerId";

@@ -2,7 +2,7 @@ package com.mercadopago.android.px.internal.features.checkout;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.PaymentServiceHandler;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
@@ -39,7 +39,7 @@ import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.services.Callback;
 import java.util.List;
 
-public class CheckoutPresenter extends BasePresenter<Checkout.View> implements PaymentServiceHandler,
+public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> implements PaymentServiceHandler,
     PostPaymentAction.ActionController, Checkout.Actions {
 
     @NonNull /* default */ final CheckoutStateModel state;
@@ -83,16 +83,6 @@ public class CheckoutPresenter extends BasePresenter<Checkout.View> implements P
     public void initialize() {
         getView().showProgress();
         configurePreference();
-    }
-
-    @Override
-    public void attachView(final Checkout.View view) {
-        super.attachView(view);
-    }
-
-    @Override
-    public void detachView() {
-        super.detachView();
     }
 
     private void configurePreference() {

@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.business_result.BusinessPaymentResultActivity;
@@ -50,7 +50,7 @@ import static com.mercadopago.android.px.internal.features.Constants.RESULT_SILE
 import static com.mercadopago.android.px.internal.features.payment_result.PaymentResultActivity.EXTRA_RESULT_CODE;
 import static com.mercadopago.android.px.model.ExitAction.EXTRA_CLIENT_RES_CODE;
 
-public class CheckoutActivity extends PXActivity<CheckoutPresenter>
+public class CheckoutActivity extends BaseActivity<CheckoutPresenter>
     implements Checkout.View, ExpressPaymentFragment.CallBack {
 
     private static final String EXTRA_PAYMENT_METHOD_CHANGED = "paymentMethodChanged";
@@ -77,8 +77,8 @@ public class CheckoutActivity extends PXActivity<CheckoutPresenter>
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         setContentView(R.layout.px_activity_checkout);
         if (savedInstanceState == null) {
             initPresenter();

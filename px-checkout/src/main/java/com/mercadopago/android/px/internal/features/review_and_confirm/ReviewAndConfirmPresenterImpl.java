@@ -36,7 +36,7 @@ import com.mercadopago.android.px.tracking.internal.events.FrictionEventTracker;
 import com.mercadopago.android.px.tracking.internal.views.ReviewAndConfirmViewTracker;
 import java.util.Set;
 
-/* default */ final class ReviewAndConfirmPresenter extends BasePresenter<ReviewAndConfirm.View>
+/* default */ final class ReviewAndConfirmPresenterImpl extends BasePresenter<ReviewAndConfirm.View>
     implements ReviewAndConfirm.Action {
 
     @NonNull private final PaymentSettingRepository paymentSettings;
@@ -50,7 +50,7 @@ import java.util.Set;
     private final PayButtonViewModel payButtonViewModel;
     private FailureRecovery recovery;
 
-    /* default */ ReviewAndConfirmPresenter(@NonNull final PaymentRepository paymentRepository,
+    /* default */ ReviewAndConfirmPresenterImpl(@NonNull final PaymentRepository paymentRepository,
         @NonNull final DiscountRepository discountRepository,
         @NonNull final PaymentSettingRepository paymentSettings,
         @NonNull final UserSelectionRepository userSelectionRepository,

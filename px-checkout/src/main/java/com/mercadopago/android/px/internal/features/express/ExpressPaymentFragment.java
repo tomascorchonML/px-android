@@ -29,6 +29,7 @@ import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.addons.BehaviourProvider;
 import com.mercadopago.android.px.addons.model.SecurityValidationData;
 import com.mercadopago.android.px.core.DynamicDialogCreator;
+import com.mercadopago.android.px.internal.base.BaseFragment;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.Constants;
 import com.mercadopago.android.px.internal.features.SecurityCodeActivity;
@@ -50,7 +51,6 @@ import com.mercadopago.android.px.internal.features.express.slider.SummaryViewAd
 import com.mercadopago.android.px.internal.features.express.slider.TitlePagerAdapter;
 import com.mercadopago.android.px.internal.features.plugins.PaymentProcessorActivity;
 import com.mercadopago.android.px.internal.util.ApiUtil;
-import com.mercadopago.android.px.internal.util.ErrorUtil;
 import com.mercadopago.android.px.internal.util.FragmentUtil;
 import com.mercadopago.android.px.internal.util.VibrationUtils;
 import com.mercadopago.android.px.internal.util.ViewUtils;
@@ -75,8 +75,6 @@ import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.Site;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,7 +84,8 @@ import static android.app.Activity.RESULT_OK;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public class ExpressPaymentFragment extends Fragment implements ExpressPayment.View, ViewPager.OnPageChangeListener,
+public class ExpressPaymentFragment extends BaseFragment<ExpressPaymentPresenter> implements ExpressPayment.View,
+    ViewPager.OnPageChangeListener,
     InstallmentsAdapter.ItemListener,
     SummaryView.OnFitListener,
     ExplodingFragment.ExplodingAnimationListener,
@@ -102,8 +101,6 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
     private static final float PAGER_NEGATIVE_MARGIN_MULTIPLIER = -1.5f;
 
     @Nullable private CallBack callback;
-
-    /* default */ ExpressPaymentPresenter presenter;
 
     private ActionBar actionBar;
     private ElementDescriptorView toolbarElementDescriptor;
@@ -141,6 +138,12 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
         void onOneTapCanceled();
     }
 
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = createPresenter();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater,
@@ -151,27 +154,14 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
-
         configureViews(view);
-
-        //TODO remove try catch after session is persisted
-        try {
-            presenter = createPresenter();
-            presenter.attachView(this);
-            if (savedInstanceState == null) {
-                presenter.trackExpressView();
-            } else {
-                renderMode = savedInstanceState.getString(EXTRA_RENDER_MODE);
-                presenter.recoverFromBundle(savedInstanceState);
-            }
-            presenter.loadViewModel();
-        } catch (final Exception e) {
-            if (savedInstanceState == null) {
-                ErrorUtil.startErrorActivity(getActivity());
-            } else {
-                cancel();
-            }
+        if (savedInstanceState == null) {
+            presenter.trackExpressView();
+        } else {
+            renderMode = savedInstanceState.getString(EXTRA_RENDER_MODE);
+            presenter.recoverFromBundle(savedInstanceState);
         }
+        presenter.loadViewModel();
 
         // Order is important - On click and events should be wired AFTER view is attached.
         summaryView.setOnFitListener(this);
@@ -273,10 +263,8 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
 
     @Override
     public void onPause() {
-        if (presenter != null) {
-            presenter.onViewPaused();
-        }
         super.onPause();
+        presenter.onViewPaused();
     }
 
     @Override
@@ -291,14 +279,10 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
 
     @Override
     public void onDetach() {
+        super.onDetach();
         callback = null;
         slideDownAndFadeAnimation = null;
         slideUpAndFadeAnimation = null;
-        //TODO remove null check after session is persisted
-        if (presenter != null) {
-            presenter.detachView();
-        }
-        super.onDetach();
     }
 
     @Override

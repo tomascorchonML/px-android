@@ -33,6 +33,12 @@ public class AddNewCardFragment extends Fragment implements AddNewCard.View, Vie
         return addNewCardFragment;
     }
 
+    @Override
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = createPresenter();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
@@ -52,14 +58,6 @@ public class AddNewCardFragment extends Fragment implements AddNewCard.View, Vie
         } else {
             throw new IllegalStateException("AddNewCardFragment does not contains model info");
         }
-        presenter = createPresenter();
-        presenter.attachView(this);
-    }
-
-    @Override
-    public void onDetach() {
-        presenter.detachView();
-        super.onDetach();
     }
 
     @Override

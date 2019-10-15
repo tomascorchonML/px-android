@@ -18,7 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.callbacks.card.CardSecurityCodeEditTextCallback;
 import com.mercadopago.android.px.internal.controllers.CheckoutTimer;
 import com.mercadopago.android.px.internal.di.Session;
@@ -44,7 +44,7 @@ import com.mercadopago.android.px.model.exceptions.ExceptionHandler;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.tracking.internal.model.Reason;
 
-public class SecurityCodeActivity extends PXActivity<SecurityCodePresenter> implements SecurityCodeActivityView {
+public class SecurityCodeActivity extends BaseActivity<SecurityCodePresenter> implements SecurityCodeActivityView {
 
     private static final String EXTRA_PAYMENT_METHOD = "PAYMENT_METHOD";
     private static final String EXTRA_TOKEN = "TOKEN";

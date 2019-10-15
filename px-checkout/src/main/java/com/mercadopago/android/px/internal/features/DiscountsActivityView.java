@@ -1,12 +1,12 @@
 package com.mercadopago.android.px.internal.features;
 
-import com.mercadopago.android.px.internal.base.MvpView;
+import com.mercadopago.android.px.internal.base.BaseView;
 
 /**
  * Created by mromar on 11/29/16.
  */
 
-public interface DiscountsActivityView extends MvpView {
+public interface DiscountsActivityView extends BaseView {
 
     void drawSummary();
 

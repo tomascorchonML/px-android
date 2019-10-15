@@ -13,11 +13,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.util.ViewUtils;
 import com.mercadopago.android.px.model.BankDeal;
 
-public class BankDealDetailActivity extends PXActivity<BankDealDetailPresenter> implements BankDealDetail.View {
+public class BankDealDetailActivity extends BaseActivity<BankDealDetailPresenter> implements BankDealDetail.View {
 
     private static final String EXTRA_MODEL = "extra_model";
 

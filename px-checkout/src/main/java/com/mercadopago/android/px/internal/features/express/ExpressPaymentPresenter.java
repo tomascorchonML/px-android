@@ -6,6 +6,7 @@ import com.mercadopago.android.px.addons.ESCManagerBehaviour;
 import com.mercadopago.android.px.addons.model.SecurityValidationData;
 import com.mercadopago.android.px.configuration.DynamicDialogConfiguration;
 import com.mercadopago.android.px.core.DynamicDialogCreator;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.core.ProductIdProvider;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecoratorMapper;
@@ -20,7 +21,6 @@ import com.mercadopago.android.px.internal.repository.GroupsRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.util.ApiUtil;
-import com.mercadopago.android.px.model.exceptions.NoConnectivityException;
 import com.mercadopago.android.px.internal.util.SecurityValidationDataFactory;
 import com.mercadopago.android.px.internal.view.AmountDescriptorView;
 import com.mercadopago.android.px.internal.view.ElementDescriptorView;
@@ -50,6 +50,7 @@ import com.mercadopago.android.px.model.PaymentMethodSearch;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
+import com.mercadopago.android.px.model.exceptions.NoConnectivityException;
 import com.mercadopago.android.px.model.internal.SummaryInfo;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import com.mercadopago.android.px.services.Callback;
@@ -63,7 +64,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-/* default */ class ExpressPaymentPresenter extends BasePresenter<ExpressPayment.View>
+/* default */ class ExpressPaymentPresenter extends AbstractBasePresenter<ExpressPayment.View>
     implements PostPaymentAction.ActionController, ExpressPayment.Actions,
     AmountDescriptorView.OnClickListener {
 
@@ -198,9 +199,9 @@ import java.util.Set;
     }
 
     @Override
-    public void detachView() {
-        onViewPaused();
-        super.detachView();
+    public void onViewDetached() {
+        super.onViewDetached();
+        detachPaymentRepository();
     }
 
     @Override
@@ -346,6 +347,10 @@ import java.util.Set;
 
     @Override
     public void onViewPaused() {
+        detachPaymentRepository();
+    }
+
+    private void detachPaymentRepository() {
         paymentRepository.detach(this);
     }
 

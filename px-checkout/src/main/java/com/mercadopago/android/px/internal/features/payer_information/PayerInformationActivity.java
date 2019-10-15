@@ -22,7 +22,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.adapters.IdentificationTypesAdapter;
-import com.mercadopago.android.px.internal.base.PXActivity;
+import com.mercadopago.android.px.internal.base.BaseActivity;
 import com.mercadopago.android.px.internal.callbacks.card.TicketIdentificationNameEditTextCallback;
 import com.mercadopago.android.px.internal.callbacks.card.TicketIdentificationNumberEditTextCallback;
 import com.mercadopago.android.px.internal.di.Session;
@@ -42,7 +42,7 @@ import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import java.util.List;
 
-public class PayerInformationActivity extends PXActivity<PayerInformationPresenter> implements PayerInformation.View {
+public class PayerInformationActivity extends BaseActivity<PayerInformationPresenter> implements PayerInformation.View {
 
     private static final String ERROR_STATE = "textview_error";
     private static final String NORMAL_STATE = "textview_normal";

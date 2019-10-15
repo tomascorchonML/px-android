@@ -28,7 +28,7 @@ import com.mercadopago.android.px.tracking.internal.events.EscFrictionEventTrack
 import com.mercadopago.android.px.tracking.internal.model.Reason;
 import java.util.List;
 
-/* default */ class CardVaultPresenter extends BasePresenter<CardVault.View> implements CardVault.Actions {
+/* default */ class CardVaultPresenterImpl extends BasePresenter<CardVault.View> implements CardVault.Actions {
 
     @NonNull private final ESCManagerBehaviour escManagerBehaviour;
     @NonNull private final AmountConfigurationRepository amountConfigurationRepository;
@@ -55,7 +55,7 @@ import java.util.List;
     //Security Code
     @Nullable /* default */ String esc;
 
-    public CardVaultPresenter(@NonNull final UserSelectionRepository userSelectionRepository,
+    public CardVaultPresenterImpl(@NonNull final UserSelectionRepository userSelectionRepository,
         @NonNull final PaymentSettingRepository paymentSettingRepository,
         @NonNull final ESCManagerBehaviour escManagerBehaviour,
         @NonNull final AmountConfigurationRepository amountConfigurationRepository,
