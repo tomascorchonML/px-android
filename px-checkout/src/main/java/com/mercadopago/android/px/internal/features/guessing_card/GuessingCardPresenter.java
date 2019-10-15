@@ -800,8 +800,6 @@ public abstract class GuessingCardPresenter extends AbstractBasePresenter<Guessi
         }
     }
 
-    public abstract void initialize();
-
     @Nullable
     public abstract String getPaymentTypeId();
 

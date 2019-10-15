@@ -74,8 +74,8 @@ public class GuessingCardPaymentPresenter extends GuessingCardPresenter {
     }
 
     @Override
-    public void initialize() {
-        getView().onValidStart();
+    public void onViewAttached(@NonNull final GuessingCard.View view) {
+        view.onValidStart();
         resolveBankDeals();
         getPaymentMethods();
         if (recoverWithCardHolder()) {

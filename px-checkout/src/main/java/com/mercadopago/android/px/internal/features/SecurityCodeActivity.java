@@ -118,8 +118,6 @@ public class SecurityCodeActivity extends BaseActivity<SecurityCodePresenter> im
         }
 
         setContentView(R.layout.px_activity_security_code);
-        presenter.attachView(this);
-        presenter.initialize();
     }
 
     @Override
@@ -129,12 +127,6 @@ public class SecurityCodeActivity extends BaseActivity<SecurityCodePresenter> im
         presenter.storeInBundle(outState);
 
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        presenter.detachView();
     }
 
     @Override
