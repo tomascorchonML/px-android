@@ -89,8 +89,8 @@ public final class PaymentProcessorActivity extends BaseActivity
     }
 
     @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onPostCreate(@Nullable final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
 
         final FrameLayout frameLayout = new FrameLayout(this);
         frameLayout.setId(R.id.px_main_container);
