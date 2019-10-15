@@ -14,8 +14,8 @@ import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.business_result.BusinessPaymentResultActivity;
 import com.mercadopago.android.px.internal.features.cardvault.CardVaultActivity;
 import com.mercadopago.android.px.internal.features.express.ExpressPaymentFragment;
-import com.mercadopago.android.px.internal.features.payment_vault.PaymentVaultActivity;
 import com.mercadopago.android.px.internal.features.payment_result.PaymentResultActivity;
+import com.mercadopago.android.px.internal.features.payment_vault.PaymentVaultActivity;
 import com.mercadopago.android.px.internal.features.plugins.PaymentProcessorActivity;
 import com.mercadopago.android.px.internal.features.review_and_confirm.ReviewAndConfirmBuilder;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
@@ -34,8 +34,6 @@ import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.exceptions.CheckoutPreferenceException;
 import com.mercadopago.android.px.model.exceptions.ExceptionHandler;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
-import com.mercadopago.android.px.tracking.internal.events.FinishCheckoutEventTracker;
-import com.mercadopago.android.px.tracking.internal.events.FrictionEventTracker;
 
 import static com.mercadopago.android.px.core.MercadoPagoCheckout.EXTRA_ERROR;
 import static com.mercadopago.android.px.core.MercadoPagoCheckout.EXTRA_PAYMENT_RESULT;
@@ -122,31 +120,23 @@ public class CheckoutActivity extends PXActivity<CheckoutPresenter>
             final ConfigurationModule configurationModule = session.getConfigurationModule();
 
             //TODO remove try catch after session is persisted
-            try {
-                presenter =
-                    new CheckoutPresenter(CheckoutStateModel.fromBundle(savedInstanceState),
-                        configurationModule.getPaymentSettings(),
-                        configurationModule.getUserSelectionRepository(),
-                        session.getGroupsRepository(),
-                        session.getPluginRepository(),
-                        session.getPaymentRepository(),
-                        session.getCheckoutPreferenceRepository(),
-                        session.getPaymentRewardRepository(),
-                        session.getInternalConfiguration());
+            presenter =
+                new CheckoutPresenter(CheckoutStateModel.fromBundle(savedInstanceState),
+                    configurationModule.getPaymentSettings(),
+                    configurationModule.getUserSelectionRepository(),
+                    session.getGroupsRepository(),
+                    session.getPluginRepository(),
+                    session.getPaymentRepository(),
+                    session.getCheckoutPreferenceRepository(),
+                    session.getPaymentRewardRepository(),
+                    session.getInternalConfiguration());
 
-                privateKey = savedInstanceState.getString(EXTRA_PRIVATE_KEY);
-                merchantPublicKey = savedInstanceState.getString(EXTRA_PUBLIC_KEY);
-                presenter.attachView(this);
+            privateKey = savedInstanceState.getString(EXTRA_PRIVATE_KEY);
+            merchantPublicKey = savedInstanceState.getString(EXTRA_PUBLIC_KEY);
+            presenter.attachView(this);
 
-                if (presenter.getState().isExpressCheckout) {
-                    presenter.retrievePaymentMethodSearch();
-                }
-            } catch (final Exception e) {
-                FrictionEventTracker.with(FinishCheckoutEventTracker.PATH,
-                    FrictionEventTracker.Id.SILENT, FrictionEventTracker.Style.NON_SCREEN,
-                    ErrorUtil.getStacktraceMessage(e))
-                    .track();
-                exitCheckout(RESULT_CANCELED);
+            if (presenter.getState().isExpressCheckout) {
+                presenter.retrievePaymentMethodSearch();
             }
         }
     }

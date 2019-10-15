@@ -134,22 +134,14 @@ public final class ReviewAndConfirmActivity extends PXActivity<ReviewAndConfirmP
         final Session session = Session.getInstance();
 
         //TODO remove try/catch after session is persisted
-        try {
-            presenter = new ReviewAndConfirmPresenter(session.getPaymentRepository(),
-                session.getDiscountRepository(),
-                session.getConfigurationModule().getPaymentSettings(),
-                session.getConfigurationModule().getUserSelectionRepository(),
-                session.getPaymentRewardRepository(),
-                session.getMercadoPagoESC(),
-                session.getProductIdProvider());
-            presenter.attachView(this);
-        } catch (final Exception e) {
-            FrictionEventTracker.with(ReviewAndConfirmViewTracker.PATH,
-                FrictionEventTracker.Id.SILENT, FrictionEventTracker.Style.SCREEN, ErrorUtil.getStacktraceMessage(e))
-                .track();
-
-            exitCheckout(RESULT_SILENT_ERROR);
-        }
+        presenter = new ReviewAndConfirmPresenter(session.getPaymentRepository(),
+            session.getDiscountRepository(),
+            session.getConfigurationModule().getPaymentSettings(),
+            session.getConfigurationModule().getUserSelectionRepository(),
+            session.getPaymentRewardRepository(),
+            session.getMercadoPagoESC(),
+            session.getProductIdProvider());
+        presenter.attachView(this);
 
         if (savedInstanceState == null) {
             checkIntentActions();

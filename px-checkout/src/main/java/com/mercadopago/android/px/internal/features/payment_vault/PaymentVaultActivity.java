@@ -45,8 +45,6 @@ import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.preferences.PaymentPreference;
-import com.mercadopago.android.px.tracking.internal.events.FrictionEventTracker;
-import com.mercadopago.android.px.tracking.internal.views.SelectMethodView;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -138,16 +136,8 @@ public class PaymentVaultActivity extends PXActivity<PaymentVaultPresenter> impl
     //TODO remove method after session is persisted
     private void validatePaymentConfiguration() {
         final Session session = Session.getInstance();
-        try {
-            session.getConfigurationModule().getPaymentSettings().getPaymentConfiguration().getCharges();
-            session.getConfigurationModule().getPaymentSettings().getPaymentConfiguration().getPaymentProcessor();
-        } catch (Exception e) {
-            FrictionEventTracker.with(SelectMethodView.PATH_PAYMENT_VAULT,
-                FrictionEventTracker.Id.SILENT, FrictionEventTracker.Style.SCREEN,
-                ErrorUtil.getStacktraceMessage(e));
-
-            exitCheckout(RESULT_SILENT_ERROR);
-        }
+        session.getConfigurationModule().getPaymentSettings().getPaymentConfiguration().getCharges();
+        session.getConfigurationModule().getPaymentSettings().getPaymentConfiguration().getPaymentProcessor();
     }
 
     public void exitCheckout(final int resCode) {

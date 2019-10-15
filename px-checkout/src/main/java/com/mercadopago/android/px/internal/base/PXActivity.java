@@ -1,12 +1,11 @@
 package com.mercadopago.android.px.internal.base;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.di.Session;
 
 public abstract class PXActivity<P extends BasePresenter> extends AppCompatActivity implements MvpView {
 
@@ -14,12 +13,41 @@ public abstract class PXActivity<P extends BasePresenter> extends AppCompatActiv
 
     protected P presenter;
 
-   @Override
+    @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        Log.d("PRUEBA", "ON CREATE " + getClass().getSimpleName());
         super.onCreate(savedInstanceState);
-        if(!Session.getInstance().isInitialized()){
-            finish();
-        }
+        new LoggingExceptionHandler(this);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d("PRUEBA", "ON RESUME " + getClass().getSimpleName());
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d("PRUEBA", "ON START " + getClass().getSimpleName());
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d("PRUEBA", "ON PAUSE " + getClass().getSimpleName());
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d("PRUEBA", "ON STOP " + getClass().getSimpleName());
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("PRUEBA", "ON DESTROY " + getClass().getSimpleName());
+        super.onDestroy();
     }
 
     @CallSuper
