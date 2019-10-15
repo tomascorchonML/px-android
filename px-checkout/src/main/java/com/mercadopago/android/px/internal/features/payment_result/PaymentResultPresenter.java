@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.mercadopago.android.px.configuration.PaymentResultScreenConfiguration;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
-import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.features.payment_result.mappers.PaymentResultViewModelMapper;
 import com.mercadopago.android.px.internal.features.payment_result.viewmodel.PaymentResultViewModel;
@@ -34,7 +34,7 @@ import com.mercadopago.android.px.tracking.internal.events.SeeAllDiscountsEvent;
 import com.mercadopago.android.px.tracking.internal.views.ResultViewTrack;
 import java.util.List;
 
-/* default */ class PaymentResultPresenterImpl extends BasePresenter<PaymentResultContract.View>
+/* default */ class PaymentResultPresenter extends AbstractBasePresenter<PaymentResultContract.View>
     implements ActionDispatcher, PaymentResultContract.Presenter, BusinessActions {
 
     private final PaymentModel paymentModel;
@@ -44,7 +44,7 @@ import java.util.List;
 
     private FailureRecovery failureRecovery;
 
-    /* default */ PaymentResultPresenterImpl(@NonNull final PaymentSettingRepository paymentSettings,
+    /* default */ PaymentResultPresenter(@NonNull final PaymentSettingRepository paymentSettings,
         @NonNull final InstructionsRepository instructionsRepository, @NonNull final PaymentModel paymentModel) {
         this.paymentModel = paymentModel;
         this.instructionsRepository = instructionsRepository;
@@ -55,9 +55,7 @@ import java.util.List;
     }
 
     @Override
-    public void attachView(final PaymentResultContract.View view) {
-        super.attachView(view);
-
+    public void onViewAttached(@NonNull final PaymentResultContract.View view) {
         if (paymentModel.getPaymentResult().isOffPayment()) {
             getInstructions();
         } else {

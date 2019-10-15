@@ -1,7 +1,7 @@
 package com.mercadopago.android.px.internal.features.bank_deals;
 
 import android.support.annotation.NonNull;
-import com.mercadopago.android.px.internal.base.BasePresenter;
+import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
 import com.mercadopago.android.px.internal.callbacks.FailureRecovery;
 import com.mercadopago.android.px.internal.callbacks.OnSelectedCallback;
 import com.mercadopago.android.px.internal.callbacks.TaggedCallback;
@@ -12,13 +12,13 @@ import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.tracking.internal.views.BankDealsViewTracker;
 import java.util.List;
 
-/* default */ class BankDealsPresenterImpl extends BasePresenter<BankDeals.View>
+/* default */ class BankDealsPresenter extends AbstractBasePresenter<BankDeals.View>
     implements BankDeals.Actions, OnSelectedCallback<BankDeal> {
 
     private FailureRecovery failureRecovery;
     private BankDealsRepository bankDealsRepository;
 
-    /* package */ BankDealsPresenterImpl(final BankDealsRepository bankDealsRepository) {
+    /* package */ BankDealsPresenter(final BankDealsRepository bankDealsRepository) {
         this.bankDealsRepository = bankDealsRepository;
     }
 

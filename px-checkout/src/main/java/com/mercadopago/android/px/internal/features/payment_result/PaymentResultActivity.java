@@ -54,8 +54,8 @@ public class PaymentResultActivity extends BaseActivity<PaymentResultPresenter> 
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         setContentView(R.layout.px_activity_payment_result);
 
         presenter = createPresenter();
