@@ -9,7 +9,6 @@ import com.mercadopago.android.px.internal.repository.UserSelectionRepository;
 import com.mercadopago.android.px.model.PaymentMethod;
 import com.mercadopago.android.px.model.PaymentTypes;
 import com.mercadopago.android.px.model.internal.ExpressPaymentMethod;
-import java.util.HashMap;
 
 public final class SecurityValidationDataFactory {
 
