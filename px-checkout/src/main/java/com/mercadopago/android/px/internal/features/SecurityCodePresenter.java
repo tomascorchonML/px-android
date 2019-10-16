@@ -138,14 +138,15 @@ public class SecurityCodePresenter extends AbstractBasePresenter<SecurityCodeAct
         }
     }
 
-    public void initialize() {
+    @Override
+    public void onViewAttached(@NonNull final SecurityCodeActivityView view) {
         try {
             validate();
-            getView().initialize();
-            getView().showTimer();
+            view.initialize();
+            view.showTimer();
             trackView();
         } catch (final IllegalStateException exception) {
-            getView().showStandardErrorMessage();
+            view.showStandardErrorMessage();
         }
     }
 

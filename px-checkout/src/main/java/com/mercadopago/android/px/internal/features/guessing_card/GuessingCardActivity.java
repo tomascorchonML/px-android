@@ -248,9 +248,6 @@ public class GuessingCardActivity extends BaseActivity<GuessingCardPresenter> im
                 .buildGuessingCardStoragePresenter(Session.getInstance(),
                     CardAssociationSession.getCardAssociationSession(this), mercadoPagoCardStorage);
         }
-
-        presenter.attachView(this);
-        presenter.initialize();
     }
 
     @Override
