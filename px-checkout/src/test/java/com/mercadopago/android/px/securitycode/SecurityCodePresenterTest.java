@@ -61,8 +61,6 @@ public class SecurityCodePresenterTest {
     public void whenCardAndTokenNotSetThenShowError() {
         final SecurityCodePresenter presenter = getBasePresenter(view);
 
-        presenter.initialize();
-
         verify(view).showStandardErrorMessage();
         verifyNoMoreInteractions(view);
     }
@@ -72,7 +70,6 @@ public class SecurityCodePresenterTest {
         final SecurityCodePresenter presenter = getBasePresenter(view);
 
         presenter.setCard(card);
-        presenter.initialize();
 
         verify(view).showStandardErrorMessage();
         verifyNoMoreInteractions(view);
@@ -83,7 +80,6 @@ public class SecurityCodePresenterTest {
         final SecurityCodePresenter presenter = getBasePresenter(view);
 
         presenter.setToken(stubToken);
-        presenter.initialize();
 
         verify(view).showStandardErrorMessage();
         verifyNoMoreInteractions(view);
@@ -95,7 +91,6 @@ public class SecurityCodePresenterTest {
 
         presenter.setCard(card);
         presenter.setToken(stubToken);
-        presenter.initialize();
 
         verify(view).showStandardErrorMessage();
         verifyNoMoreInteractions(view);
@@ -108,7 +103,6 @@ public class SecurityCodePresenterTest {
         presenter.setCard(card);
         presenter.setToken(stubToken);
         presenter.setPaymentRecovery(paymentRecovery);
-        presenter.initialize();
 
         verify(view).showStandardErrorMessage();
         verifyNoMoreInteractions(view);
@@ -122,7 +116,6 @@ public class SecurityCodePresenterTest {
         presenter.setToken(stubToken);
         presenter.setPaymentRecovery(paymentRecovery);
         presenter.setPaymentMethod(stubPaymentMethod);
-        presenter.initialize();
 
         verify(view).showStandardErrorMessage();
         verifyNoMoreInteractions(view);
@@ -130,8 +123,6 @@ public class SecurityCodePresenterTest {
 
     @Test
     public void whenStartedWithValidParamsThenInitializeAndShowTimer() {
-        presenter.initialize();
-
         verify(view).initialize();
         verify(view).showTimer();
         verifyNoMoreInteractions(view);
