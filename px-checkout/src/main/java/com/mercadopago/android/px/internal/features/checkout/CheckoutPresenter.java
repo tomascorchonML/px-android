@@ -71,6 +71,7 @@ public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> impl
         this.checkoutPreferenceRepository = checkoutPreferenceRepository;
         this.paymentRewardRepository = paymentRewardRepository;
         this.internalConfiguration = internalConfiguration;
+        state = new CheckoutStateModel();
     }
 
     @Override
@@ -124,7 +125,6 @@ public class CheckoutPresenter extends AbstractBasePresenter<Checkout.View> impl
     }
 
     /* default */ void startFlow(final PaymentMethodSearch paymentMethodSearch) {
-
         new DefaultPaymentMethodDriver(paymentMethodSearch,
             paymentSettingRepository.getCheckoutPreference().getPaymentPreference())
             .drive(new DefaultPaymentMethodDriver.PaymentMethodDriverCallback() {

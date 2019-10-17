@@ -24,14 +24,11 @@ public final class CheckoutStateModel {
     }
 
     @NonNull
-    public static CheckoutStateModel fromBundle(@Nullable final Bundle bundle) {
-        if (bundle != null) {
-            final CheckoutStateModel stateModel = new CheckoutStateModel();
-            stateModel.paymentMethodEdited = bundle.getBoolean(EXTRA_PM_EDITED);
-            stateModel.isUniquePaymentMethod = bundle.getBoolean(EXTRA_UNIQUE_PM);
-            stateModel.isExpressCheckout = bundle.getBoolean(EXTRA_IS_EXPRESS_CHECKOUT);
-            return stateModel;
-        }
-        return new CheckoutStateModel();
+    public static CheckoutStateModel fromBundle(@NonNull final Bundle bundle) {
+        final CheckoutStateModel stateModel = new CheckoutStateModel();
+        stateModel.paymentMethodEdited = bundle.getBoolean(EXTRA_PM_EDITED);
+        stateModel.isUniquePaymentMethod = bundle.getBoolean(EXTRA_UNIQUE_PM);
+        stateModel.isExpressCheckout = bundle.getBoolean(EXTRA_IS_EXPRESS_CHECKOUT);
+        return stateModel;
     }
 }
