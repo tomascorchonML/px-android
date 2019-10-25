@@ -2,7 +2,6 @@ package com.mercadopago.android.px.internal.features.express.slider;
 
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.base.AbstractBasePresenter;
-import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.repository.DisabledPaymentMethodRepository;
 import com.mercadopago.android.px.internal.viewmodel.drawables.DrawableFragmentItem;
 

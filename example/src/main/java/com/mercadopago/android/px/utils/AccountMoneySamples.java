@@ -4,7 +4,6 @@ import android.support.v4.util.Pair;
 import com.mercadopago.SamplePaymentProcessorNoView;
 import com.mercadopago.android.px.configuration.PaymentConfiguration;
 import com.mercadopago.android.px.core.MercadoPagoCheckout;
-import com.mercadopago.android.px.core.PaymentProcessor;
 import com.mercadopago.android.px.core.SplitPaymentProcessor;
 import com.mercadopago.android.px.model.BusinessPayment;
 import com.mercadopago.android.px.model.ExitAction;

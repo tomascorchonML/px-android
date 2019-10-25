@@ -109,7 +109,6 @@ public class GuessingCardStoragePresenterTest {
         when(cardPaymentMethodRepository.getCardPaymentMethods(anyString())).thenReturn(
             new StubSuccessMpCall<>(emptyList));
 
-        presenter.initialize();
         verify(view).showErrorScreen(DUMMY_ACCESS_TOKEN);
     }
 
@@ -119,7 +118,6 @@ public class GuessingCardStoragePresenterTest {
         when(cardPaymentMethodRepository.getCardPaymentMethods(anyString())).thenReturn(
             new StubSuccessMpCall<>(nullList));
 
-        presenter.initialize();
         verify(view).showErrorScreen(DUMMY_ACCESS_TOKEN);
     }
 
@@ -128,7 +126,6 @@ public class GuessingCardStoragePresenterTest {
         when(cardPaymentMethodRepository.getCardPaymentMethods(anyString())).thenReturn(
             new StubFailMpCall<List<PaymentMethod>>(PaymentMethods.getDoNotFindPaymentMethodsException()));
 
-        presenter.initialize();
         verify(view).showErrorScreen(DUMMY_ACCESS_TOKEN);
     }
 
@@ -200,7 +197,6 @@ public class GuessingCardStoragePresenterTest {
 
         when(cardPaymentMethodRepository.getCardPaymentMethods(anyString()))
             .thenReturn(new StubSuccessMpCall<>(idNotRequiredPaymentMethods));
-        presenter.initialize();
 
         final Issuer dummyIssuer = new Issuer(1L, "Dummy Issuer");
         mockIssuers(Collections.singletonList(dummyIssuer), idNotRequiredPaymentMethods.get(0).getId());
@@ -491,7 +487,6 @@ public class GuessingCardStoragePresenterTest {
     private void initializePresenterWithValidCardPaymentMethods() {
         when(cardPaymentMethodRepository.getCardPaymentMethods(anyString()))
             .thenReturn(new StubSuccessMpCall<>(cardPaymentMethodListMLA));
-        presenter.initialize();
     }
 
     private void mockIssuers(final List<Issuer> issuers, final String paymentMethodId) {
@@ -516,7 +511,6 @@ public class GuessingCardStoragePresenterTest {
 
         when(mercadoPagoCardStorage.shouldSkipResultScreen()).thenReturn(true);
 
-        presenter.initialize();
         verify(view).finishCardStorageFlowWithError();
     }
 

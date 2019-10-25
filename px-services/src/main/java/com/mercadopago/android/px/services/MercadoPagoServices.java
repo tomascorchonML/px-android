@@ -34,7 +34,6 @@ import com.mercadopago.android.px.model.Token;
 import com.mercadopago.android.px.model.requests.SecurityCodeIntent;
 import com.mercadopago.android.px.preferences.CheckoutPreference;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

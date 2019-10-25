@@ -4,7 +4,6 @@ import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.model.AmountConfiguration;
-import com.mercadopago.android.px.model.ExpressMetadata;
 import com.mercadopago.android.px.model.PayerCost;
 import com.mercadopago.android.px.model.internal.ExpressPaymentMethod;
 import java.util.ArrayList;

@@ -12,16 +12,13 @@ import com.mercadopago.android.px.utils.StubFailMpCall;
 import com.mercadopago.android.px.utils.StubSuccessMpCall;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -53,8 +50,6 @@ public class PaymentMethodsPresenterTest {
         final List<PaymentMethod> paymentMethodsStub =
             com.mercadopago.android.px.mocks.PaymentMethods.getPaymentMethodListMLA();
         when(paymentMethodsRepository.getPaymentMethods()).thenReturn(new StubSuccessMpCall(paymentMethodsStub));
-
-        presenter.start();
 
         verify(view).showProgress();
         verify(view).showPaymentMethods(paymentMethodsStub);
@@ -99,7 +94,6 @@ public class PaymentMethodsPresenterTest {
         when(paymentMethodsRepository.getPaymentMethods()).thenReturn(new StubSuccessMpCall(paymentMethodsStub));
 
         presenter.setPaymentPreference(paymentPreference);
-        presenter.start();
 
         verify(view).showProgress();
         verify(view).showPaymentMethods(ReflectionArgumentMatchers.reflectionEquals(excludedPaymentMethodsStub));
@@ -111,8 +105,6 @@ public class PaymentMethodsPresenterTest {
     private void verifyPaymentMethodsFailedApiCall() {
         final ApiException apiException = mock(ApiException.class);
         when(paymentMethodsRepository.getPaymentMethods()).thenReturn(new StubFailMpCall<>(apiException));
-
-        presenter.start();
 
         verify(view, atLeastOnce()).showProgress();
         verify(view).showError(any(MercadoPagoError.class));

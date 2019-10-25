@@ -76,6 +76,9 @@ public class CheckoutPresenterTest {
 
     @Before
     public void setUp() {
+        when(paymentSettingRepository.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
+        when(groupsRepository.getGroups()).thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA()));
+
         presenter = getPresenter();
     }
 
@@ -87,8 +90,6 @@ public class CheckoutPresenterTest {
         when(checkoutPreferenceRepository.getCheckoutPreference(PREF_ID))
             .thenReturn(new StubFailMpCall<>(apiException));
 
-        presenter.initialize();
-
         verify(checkoutView).showError(any(MercadoPagoError.class));
     }
 
@@ -98,9 +99,9 @@ public class CheckoutPresenterTest {
         when(paymentSettingRepository.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(checkoutPreferenceRepository.getCheckoutPreference(anyString()))
             .thenReturn(new StubSuccessMpCall<>(checkoutPreference));
-        when(groupsRepository.getGroups())
-            .thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA()));
+        when(groupsRepository.getGroups()).thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA()));
 
+        presenter.attachView(checkoutView);
         presenter.retrieveCheckoutPreference(anyString());
 
         verify(checkoutView).showPaymentMethodSelection();
@@ -116,11 +117,13 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA()));
 
+        presenter.attachView(checkoutView);
         presenter.retrieveCheckoutPreference(anyString());
 
         when(checkoutPreferenceRepository.getCheckoutPreference(anyString()))
             .thenReturn(new StubSuccessMpCall<>(checkoutPreference));
 
+        presenter.attachView(checkoutView);
         presenter.recoverFromFailure();
 
         verify(checkoutView).showError(any(MercadoPagoError.class));
@@ -135,8 +138,6 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubFailMpCall<>(apiException));
 
-        presenter.initialize();
-
         verify(checkoutView).showProgress();
         verify(checkoutView).showError(any(MercadoPagoError.class));
         verifyNoMoreInteractions(checkoutView);
@@ -149,8 +150,6 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA()));
 
-        presenter.initialize();
-
         verifyInitializeWithPreference();
         verifyNoMoreInteractions(checkoutView);
         verifyNoMoreInteractions(checkoutPreferenceRepository);
@@ -160,7 +159,6 @@ public class CheckoutPresenterTest {
     public void whenPreferenceIsExpiredThenShowErrorInView() {
         final CheckoutPreference preference = stubExpiredPreference();
         when(paymentSettingRepository.getCheckoutPreference()).thenReturn(preference);
-        presenter.initialize();
         verify(checkoutView).showCheckoutExceptionError(any(CheckoutPreferenceException.class));
     }
 
@@ -170,7 +168,6 @@ public class CheckoutPresenterTest {
         when(paymentSettingRepository.getCheckoutPreference()).thenReturn(preference);
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA()));
-        presenter.initialize();
 
         verify(groupsRepository).getGroups();
         verifyInitializeWithPreference();
@@ -189,6 +186,8 @@ public class CheckoutPresenterTest {
         when(paymentProcessor.shouldSkipUserConfirmation()).thenReturn(false);
 
         presenter.onPaymentMethodSelected();
+        presenter.attachView(checkoutView);
+
         verify(checkoutView).showReviewAndConfirm(false);
         verifyNoMoreInteractions(checkoutView);
     }
@@ -202,7 +201,9 @@ public class CheckoutPresenterTest {
         when(paymentConfiguration.getPaymentProcessor()).thenReturn(paymentProcessor);
         when(paymentProcessor.shouldSkipUserConfirmation()).thenReturn(true);
 
+        presenter.attachView(checkoutView);
         presenter.onPaymentMethodSelected();
+
         verify(checkoutView).showPaymentProcessorWithAnimation();
         verify(checkoutView, never()).showReviewAndConfirm(anyBoolean());
         verifyNoMoreInteractions(checkoutView);
@@ -211,21 +212,32 @@ public class CheckoutPresenterTest {
     @Test
     public void whenDefaultCardIdValidSelectedThenShowSecurityCode() {
         final PaymentMethodSearch search = mockPaymentMethodSearchForDriver(true);
-        presenter.startFlow(search);
+
+        when(groupsRepository.getGroups()).thenReturn(new StubSuccessMpCall<>(search));
+        when(paymentSettingRepository.getCheckoutPreference()).thenReturn(stubPreferenceOneItem());
+
+        presenter.attachView(checkoutView);
+
+        verify(checkoutView).showProgress();
         verify(checkoutView).showSavedCardFlow(any(Card.class));
     }
 
     @Test
     public void whenDefaultCardIdInvalidSelectedThenShowPaymentVault() {
         final PaymentMethodSearch search = mockPaymentMethodSearchForDriver(false);
+        presenter.attachView(checkoutView);
         presenter.startFlow(search);
+
         verify(checkoutView).showPaymentMethodSelection();
     }
 
     @Test
     public void whenDefaultCardIdIsNullAndDefaultPaymentTypeIsValidThenShowNewCardFlow() {
         final PaymentMethodSearch search = mockPaymentMethodSearchForNewCardDriver();
+
+        presenter.attachView(checkoutView);
         presenter.startFlow(search);
+
         verify(checkoutView).showNewCardFlow();
     }
 
@@ -235,6 +247,7 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(paymentMethodSearch));
 
+        presenter.attachView(checkoutView);
         presenter.onCardFlowCancel();
 
         verify(checkoutView).cancelCheckout();
@@ -247,6 +260,7 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(paymentMethodSearch));
 
+        presenter.attachView(checkoutView);
         presenter.onCardFlowCancel();
 
         verify(checkoutView).cancelCheckout();
@@ -259,6 +273,7 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(paymentMethodSearch));
 
+        presenter.attachView(checkoutView);
         presenter.onCardFlowCancel();
 
         verify(checkoutView).showPaymentMethodSelection();
@@ -268,18 +283,22 @@ public class CheckoutPresenterTest {
     @Test
     public void whenCardFlowCanceledAndPaymentMethodSearchFailsThenShowPaymentMethodSelection() {
         final ApiException apiException = mock(ApiException.class);
-        when(groupsRepository.getGroups())
-            .thenReturn(new StubFailMpCall<>(apiException));
+        when(groupsRepository.getGroups()).thenReturn(new StubFailMpCall<>(apiException));
 
+        presenter.attachView(checkoutView);
         presenter.onCardFlowCancel();
 
+        verify(checkoutView).showProgress();
         verify(checkoutView).showPaymentMethodSelection();
+        verify(checkoutView).showError(any());
         verifyNoMoreInteractions(checkoutView);
     }
 
     @Test
     public void whenPaymentMethodCanceledThenCancelCheckout() {
+        presenter.attachView(checkoutView);
         presenter.onPaymentMethodSelectionCancel();
+
         verify(checkoutView).cancelCheckout();
     }
 
@@ -290,6 +309,7 @@ public class CheckoutPresenterTest {
         when(paymentRepository.hasPayment()).thenReturn(true);
         when(paymentRepository.getPayment()).thenReturn(payment);
 
+        presenter.attachView(checkoutView);
         presenter.onPaymentResultResponse();
 
         verify(checkoutView).finishWithPaymentResult(payment);
@@ -297,12 +317,15 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenPaymentResultWithoutCreatedPaymentThenFinishCheckoutWithoutPaymentResult() {
+        presenter.attachView(checkoutView);
         presenter.onPaymentResultResponse();
+
         verify(checkoutView).finishWithPaymentResult();
     }
 
     @Test
     public void whenPaymentIsCanceledBecauseUserWantsToSelectOtherPaymentMethodThenShowPaymentMethodSelection() {
+        presenter.attachView(checkoutView);
         presenter.onChangePaymentMethod();
 
         verify(checkoutView).transitionOut();
@@ -315,6 +338,7 @@ public class CheckoutPresenterTest {
         when(paymentRepository.getPayment()).thenReturn(mock(Payment.class));
         when(internalConfiguration.shouldExitOnPaymentMethodChange()).thenReturn(true);
 
+        presenter.attachView(checkoutView);
         presenter.onChangePaymentMethod();
 
         verify(checkoutView).transitionOut();
@@ -326,6 +350,7 @@ public class CheckoutPresenterTest {
     public void whenUserSelectChangePaymentMethodWithoutPaymentAndExitOnIsTrueThenFinishWithPaymentResultChangePaymentMethodCode() {
         when(internalConfiguration.shouldExitOnPaymentMethodChange()).thenReturn(true);
 
+        presenter.attachView(checkoutView);
         presenter.onChangePaymentMethod();
 
         verify(checkoutView).transitionOut();
@@ -339,6 +364,8 @@ public class CheckoutPresenterTest {
             new RecoverPaymentPostPaymentAction();
         action.execute(presenter);
 
+        presenter.attachView(checkoutView);
+
         verify(checkoutView).showReviewAndConfirmAndRecoverPayment(false, action);
     }
 
@@ -350,6 +377,8 @@ public class CheckoutPresenterTest {
             new RecoverPaymentPostPaymentAction();
         action.execute(presenter);
 
+        presenter.attachView(checkoutView);
+
         verifyNoMoreInteractions(checkoutView);
     }
 
@@ -357,6 +386,7 @@ public class CheckoutPresenterTest {
     public void whenPaymentHasInvalidEscThenStartPaymentRecoveryFlow() {
         final PaymentRecovery paymentRecovery = mock(PaymentRecovery.class);
 
+        presenter.attachView(checkoutView);
         presenter.onRecoverPaymentEscInvalid(paymentRecovery);
 
         verify(checkoutView).startPaymentRecoveryFlow(paymentRecovery);
@@ -367,6 +397,7 @@ public class CheckoutPresenterTest {
         final CheckoutPresenter presenter = getOneTapPresenter();
         final PaymentRecovery paymentRecovery = mock(PaymentRecovery.class);
 
+        presenter.attachView(checkoutView);
         presenter.onRecoverPaymentEscInvalid(paymentRecovery);
 
         verify(checkoutView).startExpressPaymentRecoveryFlow(paymentRecovery);
@@ -379,6 +410,7 @@ public class CheckoutPresenterTest {
         when(paymentRepository.createPaymentRecovery()).thenReturn(paymentRecovery);
         when(paymentRecovery.isTokenRecoverable()).thenReturn(true);
 
+        presenter.attachView(checkoutView);
         presenter.onCardFlowResponse();
 
         verify(checkoutView).startPayment();
@@ -395,6 +427,7 @@ public class CheckoutPresenterTest {
         when(paymentConfiguration.getPaymentProcessor()).thenReturn(paymentProcessor);
         when(paymentProcessor.shouldSkipUserConfirmation()).thenReturn(false);
 
+        presenter.attachView(checkoutView);
         presenter.onCardFlowResponse();
 
         verify(paymentRepository).hasPayment();
@@ -414,6 +447,7 @@ public class CheckoutPresenterTest {
         when(paymentConfiguration.getPaymentProcessor()).thenReturn(paymentProcessor);
         when(paymentProcessor.shouldSkipUserConfirmation()).thenReturn(true);
 
+        presenter.attachView(checkoutView);
         presenter.onCardFlowResponse();
 
         verify(paymentRepository).hasPayment();
@@ -430,10 +464,9 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA()));
 
-        presenter.initialize();
-
         verify(checkoutView).showPaymentMethodSelection();
 
+        presenter.attachView(checkoutView);
         presenter.onPaymentMethodSelectionCancel();
 
         verify(checkoutView).cancelCheckout();
@@ -451,10 +484,9 @@ public class CheckoutPresenterTest {
         when(paymentConfiguration.getPaymentProcessor()).thenReturn(paymentProcessor);
         when(paymentProcessor.shouldSkipUserConfirmation()).thenReturn(false);
 
-        presenter.initialize();
-
         verify(checkoutView).showPaymentMethodSelection();
 
+        presenter.attachView(checkoutView);
         presenter.onPaymentMethodSelected();
         verify(checkoutView).showReviewAndConfirm(anyBoolean());
 
@@ -471,7 +503,7 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getPaymentMethodSearchWithOnlyAccountMoneyMLA()));
 
-        presenter.initialize();
+        presenter.attachView(checkoutView);
         presenter.onReviewAndConfirmCancel();
 
         verify(checkoutView).cancelCheckout();
@@ -483,7 +515,7 @@ public class CheckoutPresenterTest {
         when(groupsRepository.getGroups())
             .thenReturn(new StubSuccessMpCall<>(PaymentMethodSearchs.getCompletePaymentMethodSearchMLA()));
 
-        presenter.initialize();
+        presenter.attachView(checkoutView);
         presenter.onReviewAndConfirmCancel();
 
         verifyInitializeWithPreference();
@@ -496,6 +528,7 @@ public class CheckoutPresenterTest {
     public void whenPaymentSelectionErrorAndPaymentMethodChangeRequestedFromReviewAndConfirmOnBackExitCheckout() {
         final MercadoPagoError mercadoPagoError = mock(MercadoPagoError.class);
 
+        presenter.attachView(checkoutView);
         presenter.onChangePaymentMethodFromReviewAndConfirm();
         presenter.onPaymentMethodSelectionError(mercadoPagoError);
 
@@ -510,6 +543,7 @@ public class CheckoutPresenterTest {
     public void whenPaymentSelectionErrorAndPaymentMethodChangeNotRequestedFromReviewAndConfirmThenCancelCheckout() {
         final MercadoPagoError mercadoPagoError = mock(MercadoPagoError.class);
 
+        presenter.attachView(checkoutView);
         presenter.onPaymentMethodSelectionError(mercadoPagoError);
 
         verify(checkoutView).cancelCheckout(mercadoPagoError);
@@ -522,6 +556,7 @@ public class CheckoutPresenterTest {
         final ApiException apiException = Payments.getInvalidIdentificationPayment();
         final MercadoPagoError mpException = new MercadoPagoError(apiException, "");
 
+        presenter.attachView(checkoutView);
         presenter.onErrorCancel(mpException);
 
         verify(checkoutView).showPaymentMethodSelection();
@@ -533,8 +568,11 @@ public class CheckoutPresenterTest {
         final ApiException apiException = mock(ApiException.class);
         final MercadoPagoError mpException = new MercadoPagoError(apiException, "");
 
+        presenter.attachView(checkoutView);
         presenter.onErrorCancel(mpException);
 
+        verify(checkoutView).showProgress();
+        verify(checkoutView).showPaymentMethodSelection();
         verify(checkoutView).cancelCheckout();
         verifyNoMoreInteractions(checkoutView);
     }
@@ -542,9 +580,11 @@ public class CheckoutPresenterTest {
     @Test
     public void whenNoDefaultPaymentMethodsAndIsExpressCheckoutThenShowExpressCheckout() {
         final PaymentMethodSearch search = mock(PaymentMethodSearch.class);
+
+        when(groupsRepository.getGroups()).thenReturn(new StubSuccessMpCall<>(search));
         when(search.hasExpressCheckoutMetadata()).thenReturn(true);
 
-        presenter.noDefaultPaymentMethods(search);
+        presenter.attachView(checkoutView);
 
         verifyShowOneTap();
         verifyNoMoreInteractions(checkoutView);
@@ -559,6 +599,7 @@ public class CheckoutPresenterTest {
         when(checkoutPreference.getPaymentPreference()).thenReturn(null);
         when(search.hasExpressCheckoutMetadata()).thenReturn(true);
 
+        presenter.attachView(checkoutView);
         presenter.startFlow(search);
         presenter.cancelCheckout();
 
@@ -569,6 +610,7 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenCancelRegularCheckoutThenCancelCheckout() {
+        presenter.attachView(checkoutView);
         presenter.cancelCheckout();
 
         verify(checkoutView).cancelCheckout();
@@ -583,6 +625,8 @@ public class CheckoutPresenterTest {
         final CheckoutPreference checkoutPreference = mock(CheckoutPreference.class);
         when(paymentSettingRepository.getCheckoutPreference()).thenReturn(checkoutPreference);
         when(checkoutPreference.getSite()).thenReturn(Sites.ARGENTINA);
+
+        presenter.attachView(checkoutView);
         presenter.onPaymentError(mercadoPagoError);
 
         verify(checkoutView).hideProgress();
@@ -595,6 +639,7 @@ public class CheckoutPresenterTest {
         final MercadoPagoError mercadoPagoError = mock(MercadoPagoError.class);
         when(mercadoPagoError.isInternalServerError()).thenReturn(true);
 
+        presenter.attachView(checkoutView);
         presenter.onPaymentError(mercadoPagoError);
 
         verify(checkoutView).hideProgress();
@@ -606,6 +651,7 @@ public class CheckoutPresenterTest {
     public void whenMercadoPagoErrorIsNotInternalServerErrorOrPaymentProcessingThenShowError() {
         final MercadoPagoError mercadoPagoError = mock(MercadoPagoError.class);
 
+        presenter.attachView(checkoutView);
         presenter.onPaymentError(mercadoPagoError);
 
         verify(checkoutView).hideProgress();
@@ -616,7 +662,10 @@ public class CheckoutPresenterTest {
     @Test
     public void whenTerminalErrorThenCancelCheckout() {
         final MercadoPagoError mercadoPagoError = mock(MercadoPagoError.class);
+
+        presenter.attachView(checkoutView);
         presenter.onTerminalError(mercadoPagoError);
+
         verify(checkoutView).cancelCheckout(mercadoPagoError);
         verifyNoMoreInteractions(checkoutView);
     }
@@ -624,14 +673,19 @@ public class CheckoutPresenterTest {
     @Test
     public void whenReviewAndConfirmErrorThenCancelCheckout() {
         final MercadoPagoError mercadoPagoError = mock(MercadoPagoError.class);
+
+        presenter.attachView(checkoutView);
         presenter.onReviewAndConfirmError(mercadoPagoError);
+
         verify(checkoutView).cancelCheckout(mercadoPagoError);
         verifyNoMoreInteractions(checkoutView);
     }
 
     @Test
     public void whenCustomReviewAndConfirmResponseThenCancelCheckout() {
+        presenter.attachView(checkoutView);
         presenter.onCustomReviewAndConfirmResponse(CUSTOM_RESULT_CODE);
+
         verify(checkoutView).cancelCheckout(eq(CUSTOM_RESULT_CODE), anyBoolean());
         verifyNoMoreInteractions(checkoutView);
     }
@@ -642,6 +696,7 @@ public class CheckoutPresenterTest {
         when(paymentRepository.hasPayment()).thenReturn(true);
         when(paymentRepository.getPayment()).thenReturn(payment);
 
+        presenter.attachView(checkoutView);
         presenter.onCustomPaymentResultResponse(CUSTOM_RESULT_CODE);
 
         verify(checkoutView).finishWithPaymentResult(CUSTOM_RESULT_CODE, payment);
@@ -652,6 +707,7 @@ public class CheckoutPresenterTest {
     public void whenCustomPaymentResultResponseHasNotPaymentThenFinishWithPaymentResult() {
         when(paymentRepository.hasPayment()).thenReturn(false);
 
+        presenter.attachView(checkoutView);
         presenter.onCustomPaymentResultResponse(CUSTOM_RESULT_CODE);
 
         verify(checkoutView).finishWithPaymentResult(CUSTOM_RESULT_CODE);
@@ -664,6 +720,7 @@ public class CheckoutPresenterTest {
         when(paymentRepository.hasPayment()).thenReturn(true);
         when(paymentRepository.getPayment()).thenReturn(payment);
 
+        presenter.attachView(checkoutView);
         presenter.onCustomPaymentResultResponse(CUSTOM_RESULT_CODE);
 
         verify(checkoutView).finishWithPaymentResult(CUSTOM_RESULT_CODE);
@@ -672,14 +729,18 @@ public class CheckoutPresenterTest {
 
     @Test
     public void whenFailureRecoveryNotSetThenShowFailureRecoveryError() {
+        presenter.attachView(checkoutView);
         presenter.recoverFromFailure();
+
         verify(checkoutView).showFailureRecoveryError();
         verifyNoMoreInteractions(checkoutView);
     }
 
     @Test
     public void whenExitWithCodeThenExitCheckout() {
+        presenter.attachView(checkoutView);
         presenter.exitWithCode(CUSTOM_RESULT_CODE);
+
         verify(checkoutView).exitCheckout(CUSTOM_RESULT_CODE);
         verifyNoMoreInteractions(checkoutView);
     }
@@ -687,25 +748,26 @@ public class CheckoutPresenterTest {
     @Test
     public void whenCvvRequiredThenShowSavedCardFlow() {
         final Card card = mock(Card.class);
+
+        presenter.attachView(checkoutView);
         presenter.onCvvRequired(card);
+
         verify(checkoutView).showSavedCardFlow(card);
         verifyNoMoreInteractions(checkoutView);
     }
 
     @Test
     public void whenVisualPaymentConfiguredThenShowPaymentProcessor() {
+        presenter.attachView(checkoutView);
         presenter.onVisualPayment();
+
         verify(checkoutView).showPaymentProcessor();
         verifyNoMoreInteractions(checkoutView);
     }
 
-// --------- Helper methods ----------- //
-
     @NonNull
-    private CheckoutPresenter getBasePresenter(
-        final Checkout.View view, final CheckoutStateModel checkoutStateModel) {
-
-        presenter = new CheckoutPresenter(checkoutStateModel, paymentSettingRepository,
+    private CheckoutPresenter getBasePresenter() {
+        presenter = new CheckoutPresenter(paymentSettingRepository,
             userSelectionRepository,
             groupsRepository,
             pluginRepository,
@@ -714,20 +776,19 @@ public class CheckoutPresenterTest {
             paymentRewardRepository,
             internalConfiguration);
 
-        presenter.attachView(view);
         return presenter;
     }
 
     @NonNull
     private CheckoutPresenter getPresenter() {
-        return getBasePresenter(checkoutView, new CheckoutStateModel());
+        return getBasePresenter();
     }
 
     @NonNull
     private CheckoutPresenter getOneTapPresenter() {
         final CheckoutStateModel stateModel = new CheckoutStateModel();
         stateModel.isExpressCheckout = true;
-        return getBasePresenter(checkoutView, stateModel);
+        return getBasePresenter();
     }
 
     private void verifyInitializeWithPreference() {
@@ -736,9 +797,9 @@ public class CheckoutPresenterTest {
     }
 
     @NonNull
-    private PaymentMethodSearch mockPaymentMethodSearchForDriver(boolean isValidCard) {
-        PaymentMethodSearch search = mock(PaymentMethodSearch.class);
-        PaymentMethod paymentMethod = mock(PaymentMethod.class);
+    private PaymentMethodSearch mockPaymentMethodSearchForDriver(final boolean isValidCard) {
+        final PaymentMethodSearch search = mock(PaymentMethodSearch.class);
+        final PaymentMethod paymentMethod = mock(PaymentMethod.class);
         when(paymentMethod.getPaymentTypeId()).thenReturn("debit_card");
         final ArrayList settingsList = mock(ArrayList.class);
         final Setting setting = mock(Setting.class);
@@ -776,6 +837,7 @@ public class CheckoutPresenterTest {
     }
 
     private void verifyShowOneTap() {
+        verify(checkoutView).showProgress();
         verify(checkoutView, atLeastOnce()).hideProgress();
         verify(checkoutView).showOneTap();
     }

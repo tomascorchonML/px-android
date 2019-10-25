@@ -17,9 +17,9 @@ import static com.mercadopago.android.px.utils.StubCheckoutPreferenceUtils.stubP
 import static com.mercadopago.android.px.utils.StubCheckoutPreferenceUtils.stubPreferenceWithPositiveInstallmentsNumber;
 import static com.mercadopago.android.px.utils.StubCheckoutPreferenceUtils.stubPreferenceWithPositiveMaxInstallmentsNumberAndNegativeDefaultInstallmentsNumber;
 import static com.mercadopago.android.px.utils.StubCheckoutPreferenceUtils.stubPreferenceWithSomePaymentTypesExcluded;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 public class CheckoutPreferenceTest {
 

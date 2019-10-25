@@ -2,7 +2,6 @@ package com.mercadopago.android.px.internal.features.payment_result.components;
 
 import android.content.Context;
 import com.mercadopago.android.px.R;
-import com.mercadopago.android.px.internal.features.payment_result.components.BodyError;
 import com.mercadopago.android.px.internal.features.payment_result.props.BodyErrorProps;
 import com.mercadopago.android.px.internal.util.TextUtil;
 import com.mercadopago.android.px.internal.view.ActionDispatcher;

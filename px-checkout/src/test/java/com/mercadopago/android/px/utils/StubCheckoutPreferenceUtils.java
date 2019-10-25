@@ -125,15 +125,15 @@ public final class StubCheckoutPreferenceUtils {
     }
 
     public static CheckoutPreference stubExpiredPreference() {
-        GregorianCalendar calendar = new GregorianCalendar(2015, 3, 3); //Date should be before that today
-        Date date = calendar.getTime();
+        final GregorianCalendar calendar = new GregorianCalendar(2015, 3, 3); //Date should be before that today
+        final Date date = calendar.getTime();
         return stubBuilderOneItemAndPayer()
             .setExpirationDate(date)
             .build();
     }
 
     private static List<Item> stubOneItemList() {
-        Item dummy = new Item.Builder("Dummy item", 1, BigDecimal.TEN).setDescription("description").build();
+        final Item dummy = new Item.Builder("Dummy item", 1, BigDecimal.TEN).setDescription("description").build();
         return Collections.singletonList(dummy);
     }
 }
