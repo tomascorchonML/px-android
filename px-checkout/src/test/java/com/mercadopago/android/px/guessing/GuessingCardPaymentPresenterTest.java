@@ -571,11 +571,11 @@ public class GuessingCardPaymentPresenterTest {
     }
 
     @Test
-    public void whenPaymentMethodExclusionSetAndUserSelectsItWithOnlyOnePMAvailableThenShowInfoMessage() {
-
+    public void whenPaymentMethodExclusionSetAndUserSelectsItWithOnlyOnePaymentMethodAvailableThenShowInfoMessage() {
         //We only have visa and master
         final List<PaymentMethod> paymentMethodList = PaymentMethods.getPaymentMethodListWithTwoOptions();
         final PaymentMethodSearch paymentMethodSearch = mock(PaymentMethodSearch.class);
+
         when(groupsRepository.getGroups()).thenReturn(new StubSuccessMpCall<>(paymentMethodSearch));
         when(paymentMethodSearch.getPaymentMethods()).thenReturn(paymentMethodList);
 
@@ -584,13 +584,13 @@ public class GuessingCardPaymentPresenterTest {
         excludedPaymentMethodIds.add("master");
 
         when(userSelectionRepository.getPaymentType()).thenReturn(PaymentTypes.CREDIT_CARD);
-
-        when(paymentPreference.getSupportedPaymentMethods(paymentMethodSearch.getPaymentMethods()))
-            .thenReturn(Collections.singletonList(paymentMethodList.get(0)));
+        when(paymentPreference.getSupportedPaymentMethods(paymentMethodSearch.getPaymentMethods())).thenReturn(Collections.singletonList(paymentMethodList.get(0)));
 
         final PaymentMethodGuessingController controller = presenter.getGuessingController();
         final List<PaymentMethod> guessedPaymentMethods = controller.guessPaymentMethodsByBin(Cards.MOCKED_BIN_MASTER);
         presenter.resolvePaymentMethodListSet(guessedPaymentMethods, Cards.MOCKED_BIN_MASTER);
+
+        verify(view).onValidStart();
 
         //When the user enters a master bin the container turns red
         verify(view).setInvalidCardOnePaymentMethodErrorView();
