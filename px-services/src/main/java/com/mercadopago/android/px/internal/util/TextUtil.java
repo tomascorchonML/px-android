@@ -37,6 +37,10 @@ public final class TextUtil {
         return text != null && DIGIT_PATTERN.matcher(text).matches();
     }
 
+    public static <T extends CharSequence> T ifNotEmptyOrElse(@Nullable final T text, @NonNull final T fallback) {
+        return isNotEmpty(text) ? text : fallback;
+    }
+
     @NonNull
     public static String join(@Nullable final Iterable<String> values) {
         return values != null ? TextUtils.join(CSV_DELIMITER, values) : "";

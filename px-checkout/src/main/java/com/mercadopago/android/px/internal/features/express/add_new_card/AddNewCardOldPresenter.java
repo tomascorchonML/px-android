@@ -2,7 +2,6 @@ package com.mercadopago.android.px.internal.features.express.add_new_card;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.repository.InitRepository;
 import com.mercadopago.android.px.model.PaymentMethodSearchItem;
 import com.mercadopago.android.px.model.exceptions.ApiException;
@@ -10,13 +9,14 @@ import com.mercadopago.android.px.model.internal.InitResponse;
 import com.mercadopago.android.px.services.Callback;
 import java.util.List;
 
-public class ChangePaymentMethodPresenter extends BasePresenter<AddNewCard.View> implements AddNewCard.Actions {
+public class AddNewCardOldPresenter extends OtherPaymentMethodPresenter {
 
     private static final String TYPE_TO_DRIVE = "cards";
 
     private final InitRepository initRepository;
 
-    /* default */ ChangePaymentMethodPresenter(@NonNull final InitRepository initRepository) {
+    /* default */ AddNewCardOldPresenter(@NonNull final InitRepository initRepository) {
+        super(null);
         this.initRepository = initRepository;
     }
 
@@ -25,17 +25,12 @@ public class ChangePaymentMethodPresenter extends BasePresenter<AddNewCard.View>
         initRepository.init().execute(new Callback<InitResponse>() {
             @Override
             public void success(final InitResponse initResponse) {
-                final PaymentMethodSearchItem paymentMethodSearchItem = getCardsGroup(initResponse.getGroups());
-                if (paymentMethodSearchItem != null) {
-                    getView().showPaymentMethodsWithSelection(paymentMethodSearchItem);
-                } else {
-                    getView().showPaymentMethods();
-                }
+                getView().showPaymentMethods(getCardsGroup(initResponse.getGroups()));
             }
 
             @Override
             public void failure(final ApiException apiException) {
-                throw new IllegalStateException("ChangePaymentMethodPresenter could not retrieve PaymentMethodSearch");
+                throw new IllegalStateException("AddNewCardPresenter could not retrieve PaymentMethodSearch");
             }
         });
     }

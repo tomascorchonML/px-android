@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.mercadolibre.android.cardform.internal.CardFormWithFragment;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.internal.base.BaseFragment;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.checkout.CheckoutActivity;
+import com.mercadopago.android.px.internal.features.express.ExpressPaymentFragment;
 import com.mercadopago.android.px.internal.features.payment_vault.PaymentVaultActivity;
 import com.mercadopago.android.px.internal.util.ViewUtils;
 import com.mercadopago.android.px.internal.view.MPTextView;
@@ -23,8 +25,10 @@ import com.mercadopago.android.px.model.PaymentMethodSearchItem;
 import com.mercadopago.android.px.model.internal.Text;
 
 public class OtherPaymentMethodFragment
-    extends BaseFragment<ChangePaymentMethodPresenter, OtherPaymentMethodFragmentItem>
+    extends BaseFragment<OtherPaymentMethodPresenter, OtherPaymentMethodFragmentItem>
     implements AddNewCard.View {
+
+    private static final String OLD_VERSION = "v11111";
 
     private View addNewCardView;
     private View offPaymentMethodView;
@@ -37,8 +41,13 @@ public class OtherPaymentMethodFragment
     }
 
     @Override
-    protected ChangePaymentMethodPresenter createPresenter() {
-        return new ChangePaymentMethodPresenter(Session.getInstance().getInitRepository());
+    protected OtherPaymentMethodPresenter createPresenter() {
+        if (model.getNewCardMetadata() != null && OLD_VERSION.equals(model.getNewCardMetadata().getVersion())) {
+            return new AddNewCardOldPresenter(Session.getInstance().getInitRepository());
+        } else {
+            return new OtherPaymentMethodPresenter(
+                Session.getInstance().getConfigurationModule().getPaymentSettings());
+        }
     }
 
     @Nullable
@@ -104,16 +113,19 @@ public class OtherPaymentMethodFragment
     }
 
     @Override
-    public void showPaymentMethods() {
-        //TODO refactor
-        PaymentVaultActivity.start(getActivity(), CheckoutActivity.REQ_PAYMENT_VAULT);
+    public void startCardForm(@NonNull final CardFormWithFragment cardForm) {
+        cardForm.start(getParentFragment().getFragmentManager(), ExpressPaymentFragment.REQ_CODE_CARD_FORM,
+            R.id.one_tap_fragment);
     }
 
     @Override
-    public void showPaymentMethodsWithSelection(@NonNull final PaymentMethodSearchItem paymentMethodSearchItem) {
-        //TODO refactor
-        PaymentVaultActivity
-            .startWithPaymentMethodSelected(getActivity(), CheckoutActivity.REQ_PAYMENT_VAULT, paymentMethodSearchItem);
+    public void showPaymentMethods(@Nullable final PaymentMethodSearchItem paymentMethodSearchItem) {
+        if (paymentMethodSearchItem == null) {
+            PaymentVaultActivity.start(getActivity(), CheckoutActivity.REQ_PAYMENT_VAULT);
+        } else {
+            PaymentVaultActivity.startWithPaymentMethodSelected(
+                getActivity(), CheckoutActivity.REQ_PAYMENT_VAULT, paymentMethodSearchItem);
+        }
     }
 
     public interface OnOtherPaymentMethodClickListener {
