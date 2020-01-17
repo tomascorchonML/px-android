@@ -9,13 +9,15 @@ import com.mercadopago.android.px.model.OfflinePaymentTypesMetadata;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mercadopago.android.px.internal.util.TextUtil.EMPTY;
+import static com.mercadopago.android.px.internal.util.TextUtil.UNDERSCORE;
 import static com.mercadopago.android.px.internal.util.TextUtil.isNotEmpty;
 
 /* default */ final class FromOfflinePaymentTypesMetadataToOfflineItems {
 
     private final Context context;
 
-    public FromOfflinePaymentTypesMetadataToOfflineItems(final Context context) {
+    /* default */ FromOfflinePaymentTypesMetadataToOfflineItems(final Context context) {
         this.context = context;
     }
 
@@ -26,10 +28,13 @@ import static com.mercadopago.android.px.internal.util.TextUtil.isNotEmpty;
         for (final OfflinePaymentType offlinePaymentType : metadata.getPaymentTypes()) {
             offlineMethodItems.add(new OfflineMethodItem(offlinePaymentType.getName()));
             for (final OfflinePaymentMethod offlinePaymentMethod : offlinePaymentType.getPaymentMethods()) {
+                final String iconId = offlinePaymentMethod.getId() +
+                    (offlinePaymentMethod.getInstructionId().equals(offlinePaymentType.getId()) ?
+                        EMPTY : UNDERSCORE + offlinePaymentMethod.getInstructionId());
                 offlineMethodItems.add(
                     new OfflineMethodItem(offlinePaymentMethod.getId(), offlinePaymentMethod.getInstructionId(),
                         offlinePaymentMethod.getName(), offlinePaymentMethod.getDescription(),
-                        getIconResourceId(offlinePaymentMethod.getId() + offlinePaymentMethod.getInstructionId())));
+                        getIconResourceId(iconId)));
             }
         }
 
