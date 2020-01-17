@@ -156,7 +156,7 @@ public class PaymentService implements PaymentRepository {
             @Override
             public void success(final InitResponse initResponse) {
                 userSelectionRepository.select(PaymentMethodHelper
-                    .getPaymentMethodByStartWithId(initResponse.getPaymentMethods(), paymentMethodId,
+                    .assembleOfflinePaymentMethod(initResponse.getPaymentMethods(), paymentMethodId,
                         paymentTypeId), null);
                 startPayment();
             }

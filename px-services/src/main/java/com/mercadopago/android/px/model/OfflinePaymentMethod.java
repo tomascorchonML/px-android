@@ -8,6 +8,7 @@ import java.io.Serializable;
 public final class OfflinePaymentMethod implements Parcelable, Serializable {
 
     private final String id;
+    private final String instructionId;
     private final Text name;
     private final Text description;
     private final boolean additionalInfoNeeded;
@@ -26,6 +27,7 @@ public final class OfflinePaymentMethod implements Parcelable, Serializable {
 
     protected OfflinePaymentMethod(final Parcel in) {
         id = in.readString();
+        instructionId = in.readString();
         name = in.readParcelable(Text.class.getClassLoader());
         description = in.readParcelable(Text.class.getClassLoader());
         additionalInfoNeeded = in.readByte() != 0;
@@ -33,6 +35,10 @@ public final class OfflinePaymentMethod implements Parcelable, Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public String getInstructionId() {
+        return instructionId;
     }
 
     public Text getName() {
@@ -51,6 +57,7 @@ public final class OfflinePaymentMethod implements Parcelable, Serializable {
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(id);
+        dest.writeString(instructionId);
         dest.writeParcelable(name, flags);
         dest.writeParcelable(description, flags);
         dest.writeByte((byte) (additionalInfoNeeded ? 1 : 0));
