@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import com.mercadolibre.android.cardform.internal.CardFormWithFragment;
 import com.mercadolibre.android.cardform.internal.LifecycleListener;
 import com.mercadopago.android.px.R;
+import com.mercadopago.android.px.core.BackHandler;
 import com.mercadopago.android.px.internal.base.PXActivity;
 import com.mercadopago.android.px.internal.di.ConfigurationModule;
 import com.mercadopago.android.px.internal.di.Session;
@@ -142,18 +143,27 @@ public class CheckoutActivity extends PXActivity<CheckoutPresenter>
 
     @Override
     public void onBackPressed() {
+        final int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        final Fragment fragment = getSupportFragmentManager().getFragments().get(backStackEntryCount);
+        if (fragment instanceof BackHandler) {
+            boolean shouldHandleBack = ((BackHandler) fragment).handleBack();
+            if(!shouldHandleBack) {
+                return;
+            }
+        }
+
         final Fragment cardFormFragment = getSupportFragmentManager().findFragmentByTag(CardFormWithFragment.TAG);
         if (cardFormFragment != null && cardFormFragment.getChildFragmentManager().getBackStackEntryCount() > 0) {
             cardFormFragment.getChildFragmentManager().popBackStack();
             return;
         }
-        if (getSupportFragmentManager() != null && getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (getSupportFragmentManager() != null && backStackEntryCount > 0) {
             getSupportFragmentManager().popBackStack();
             return;
         }
-        final ExpressPaymentFragment fragment = FragmentUtil
+        final ExpressPaymentFragment expressPaymentFragment = FragmentUtil
             .getFragmentByTag(getSupportFragmentManager(), TAG_ONETAP_FRAGMENT, ExpressPaymentFragment.class);
-        if (fragment == null || !fragment.isExploding()) {
+        if (expressPaymentFragment == null || !expressPaymentFragment.isExploding()) {
             super.onBackPressed();
         }
     }

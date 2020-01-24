@@ -15,13 +15,13 @@ public interface OfflineMethods {
     interface OffMethodsView extends MvpView {
         void startLoadingButton(final int paymentTimeout, @NonNull final PayButtonViewModel payButtonViewModel);
 
-        void disableCloseButton();
-
         void showPaymentResult(IPaymentDescriptor payment);
 
         void finishLoading(@NonNull final ExplodeDecorator params);
 
         void cancelLoading();
+
+        boolean isExploding();
 
         void showErrorSnackBar(MercadoPagoError error);
 
@@ -38,6 +38,8 @@ public interface OfflineMethods {
         void onSheetStateChanged(int newSheetState);
 
         void startSecurityValidation(SecurityValidationData data);
+
+        void startKnowYourCustomerFlow(@NonNull final String flowLink);
     }
 
     interface Actions extends PaymentServiceHandler {
@@ -46,7 +48,7 @@ public interface OfflineMethods {
 
         void onViewPaused();
 
-        void loadViewModel();
+        void updateModel();
 
         void selectMethod(@NonNull final OfflineMethodItem selectedItem);
 
@@ -55,5 +57,7 @@ public interface OfflineMethods {
         void startPayment();
 
         void trackSecurityFriction();
+
+        void trackAbort();
     }
 }

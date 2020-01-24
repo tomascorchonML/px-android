@@ -3,11 +3,13 @@ package com.mercadopago.android.px.internal.features.express.add_new_card;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
@@ -27,12 +29,14 @@ import com.mercadolibre.android.ui.widgets.MeliSnackbar;
 import com.mercadopago.android.px.R;
 import com.mercadopago.android.px.addons.BehaviourProvider;
 import com.mercadopago.android.px.addons.model.SecurityValidationData;
+import com.mercadopago.android.px.core.BackHandler;
 import com.mercadopago.android.px.internal.base.BaseFragment;
 import com.mercadopago.android.px.internal.di.Session;
 import com.mercadopago.android.px.internal.features.checkout.CheckoutActivity;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecorator;
 import com.mercadopago.android.px.internal.features.explode.ExplodeParams;
 import com.mercadopago.android.px.internal.features.explode.ExplodingFragment;
+import com.mercadopago.android.px.internal.features.express.ExpressPaymentFragment;
 import com.mercadopago.android.px.internal.features.plugins.PaymentProcessorActivity;
 import com.mercadopago.android.px.internal.font.PxFont;
 import com.mercadopago.android.px.internal.util.ApiUtil;
@@ -50,7 +54,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 public class OfflineMethodsFragment extends BaseFragment<OfflineMethodsPresenter, OfflinePaymentTypesMetadata>
-    implements OfflineMethods.OffMethodsView, ExplodingFragment.ExplodingAnimationListener {
+    implements OfflineMethods.OffMethodsView, ExplodingFragment.ExplodingAnimationListener, BackHandler {
 
     private static final String TAG_EXPLODING_FRAGMENT = "TAG_EXPLODING_FRAGMENT";
     private static final int REQ_CODE_PAYMENT_PROCESSOR = 201;
@@ -105,7 +109,11 @@ public class OfflineMethodsFragment extends BaseFragment<OfflineMethodsPresenter
 
         configureRecycler(view.findViewById(R.id.methods));
 
-        presenter.loadViewModel();
+        if (savedInstanceState == null) {
+            presenter.trackOfflineMethodsView(model);
+        }
+
+        presenter.updateModel();
     }
 
     private void configureRecycler(@NonNull final RecyclerView recycler) {
@@ -174,11 +182,19 @@ public class OfflineMethodsFragment extends BaseFragment<OfflineMethodsPresenter
             session.getAmountRepository(),
             session.getDiscountRepository(),
             session.getProductIdProvider(),
-            model.getPaymentTypes().get(0).getId());
+            model.getPaymentTypes().get(0).getId(),
+            session.getInitRepository());
     }
 
     @Override
     public void startLoadingButton(final int paymentTimeout, @NonNull final PayButtonViewModel payButtonViewModel) {
+        final Fragment fragment = getTargetFragment();
+        if (fragment instanceof SheetHidability) {
+            ((SheetHidability) fragment).setSheetHidability(false);
+        } else {
+            throw new IllegalStateException("Target fragment should implement ");
+        }
+
         hideConfirmButton();
 
         ViewUtils.runWhenViewIsFullyMeasured(getView(), () -> {
@@ -192,6 +208,10 @@ public class OfflineMethodsFragment extends BaseFragment<OfflineMethodsPresenter
         });
     }
 
+    public interface SheetHidability {
+        void setSheetHidability(boolean b);
+    }
+
     private void hideConfirmButton() {
         confirmButton.clearAnimation();
         confirmButton.setVisibility(INVISIBLE);
@@ -200,11 +220,6 @@ public class OfflineMethodsFragment extends BaseFragment<OfflineMethodsPresenter
     private void showConfirmButton() {
         confirmButton.clearAnimation();
         confirmButton.setVisibility(VISIBLE);
-    }
-
-    @Override
-    public void disableCloseButton() {
-        //TODO disabled close button
     }
 
     @Override
@@ -228,6 +243,7 @@ public class OfflineMethodsFragment extends BaseFragment<OfflineMethodsPresenter
         } else {
             presenter.hasFinishPaymentAnimation();
         }
+        ((ExpressPaymentFragment) getTargetFragment()).setSheetHidability(true);
     }
 
     @Override
@@ -263,6 +279,23 @@ public class OfflineMethodsFragment extends BaseFragment<OfflineMethodsPresenter
     @Override
     public void showPaymentProcessor() {
         PaymentProcessorActivity.start(this, REQ_CODE_PAYMENT_PROCESSOR);
+    }
+
+    @Override
+    public boolean handleBack() {
+        if (getFragmentManager() != null && !isExploding()) {
+            presenter.trackAbort();
+        }
+        return !isExploding();
+    }
+
+    @Override
+    public boolean isExploding() {
+        return FragmentUtil.isFragmentVisible(getChildFragmentManager(), TAG_EXPLODING_FRAGMENT);
+    }
+
+    public void onHideSheet() {
+
     }
 
     interface OnMethodSelectedListener {
@@ -304,6 +337,13 @@ public class OfflineMethodsFragment extends BaseFragment<OfflineMethodsPresenter
     public void startSecurityValidation(final SecurityValidationData data) {
         confirmButton.setState(MeliButton.State.DISABLED);
         BehaviourProvider.getSecurityBehaviour().startValidation(this, data, REQ_CODE_BIOMETRICS);
+    }
+
+    @Override
+    public void startKnowYourCustomerFlow(@NonNull final String flowLink) {
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(flowLink));
+        startActivity(intent);
     }
 
     @Override

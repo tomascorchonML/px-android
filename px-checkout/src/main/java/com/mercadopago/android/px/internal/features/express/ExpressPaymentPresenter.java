@@ -282,8 +282,12 @@ import org.jetbrains.annotations.Nullable;
 
     @Override
     public void cancel() {
-        tracker.trackAbort();
+        trackAbort();
         getView().cancel();
+    }
+
+    public void trackAbort(){
+        tracker.trackAbort();
     }
 
     @Override

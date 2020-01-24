@@ -98,7 +98,8 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
     ExplodingFragment.ExplodingAnimationListener,
     SplitPaymentHeaderAdapter.SplitListener,
     PaymentMethodFragment.DisabledDetailDialogLauncher,
-    OtherPaymentMethodFragment.OnOtherPaymentMethodClickListener {
+    OtherPaymentMethodFragment.OnOtherPaymentMethodClickListener,
+    OfflineMethodsFragment.SheetHidability {
 
     private static final String TAG_EXPLODING_FRAGMENT = "TAG_EXPLODING_FRAGMENT";
     private static final String TAG_OFFLINE_METHODS_FRAGMENT = "TAG_OFFLINE_METHODS_FRAGMENT";
@@ -146,6 +147,11 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
         presenter.onSplitChanged(isChecked);
     }
 
+    @Override
+    public void setSheetHidability(final boolean b) {
+        bottomSheetBehavior.setHideable(b);
+    }
+
     public interface CallBack {
         void onOneTapCanceled();
     }
@@ -160,7 +166,8 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
             if (enter) {
                 final Animation slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.px_summary_slide_up_in);
                 slideUp.setStartOffset(offset);
-                paymentMethodPager.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.px_summary_slide_up_in));
+                paymentMethodPager
+                    .startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.px_summary_slide_up_in));
 
                 final Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.px_fade_in);
                 fadeIn.setDuration(duration);
@@ -173,7 +180,8 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
 
                 summaryView.animateEnter();
             } else {
-                final Animation slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.px_summary_slide_down_out);
+                final Animation slideDown =
+                    AnimationUtils.loadAnimation(getContext(), R.anim.px_summary_slide_down_out);
                 paymentMethodPager.startAnimation(slideDown);
 
                 final Animation fadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.px_fade_out);
@@ -300,6 +308,7 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
                         OfflineMethodsFragment.class);
                 switch (state) {
                 case BottomSheetBehavior.STATE_HIDDEN:
+                    presenter.trackAbort();
                     getFragmentManager().popBackStackImmediate();
                     break;
                 case BottomSheetBehavior.STATE_DRAGGING:
@@ -766,12 +775,14 @@ public class ExpressPaymentFragment extends Fragment implements ExpressPayment.V
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         if (FragmentUtil.getFragmentByTag(getFragmentManager(), TAG_OFFLINE_METHODS_FRAGMENT) == null) {
+            OfflineMethodsFragment instance = OfflineMethodsFragment.getInstance(offlineMethods);
             getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.animator.px_slide_up, 0, 0, R.animator.px_slide_down)
-                .replace(R.id.off_methods_fragment, OfflineMethodsFragment.getInstance(offlineMethods),
+                .replace(R.id.off_methods_fragment, instance,
                     TAG_OFFLINE_METHODS_FRAGMENT)
                 .addToBackStack(null)
                 .commit();
+            instance.setTargetFragment(this, 1);
         } else {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }

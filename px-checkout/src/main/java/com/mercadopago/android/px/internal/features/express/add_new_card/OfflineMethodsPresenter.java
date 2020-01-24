@@ -1,10 +1,12 @@
 package com.mercadopago.android.px.internal.features.express.add_new_card;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.mercadopago.android.px.addons.model.SecurityValidationData;
 import com.mercadopago.android.px.internal.base.BasePresenter;
 import com.mercadopago.android.px.internal.core.ProductIdProvider;
 import com.mercadopago.android.px.internal.features.explode.ExplodeDecoratorMapper;
+import com.mercadopago.android.px.internal.repository.InitRepository;
 import com.mercadopago.android.px.internal.repository.PaymentRepository;
 import com.mercadopago.android.px.internal.repository.PaymentSettingRepository;
 import com.mercadopago.android.px.internal.util.ApiUtil;
@@ -16,11 +18,19 @@ import com.mercadopago.android.px.internal.viewmodel.PayButtonViewModel;
 import com.mercadopago.android.px.internal.viewmodel.mappers.PayButtonViewModelMapper;
 import com.mercadopago.android.px.model.Card;
 import com.mercadopago.android.px.model.IPaymentDescriptor;
+import com.mercadopago.android.px.model.OfflineMethodsCompliance;
+import com.mercadopago.android.px.model.OfflinePaymentTypesMetadata;
+import com.mercadopago.android.px.model.Payer;
 import com.mercadopago.android.px.model.PaymentRecovery;
 import com.mercadopago.android.px.model.exceptions.ApiException;
 import com.mercadopago.android.px.model.exceptions.MercadoPagoError;
 import com.mercadopago.android.px.model.exceptions.NoConnectivityException;
+import com.mercadopago.android.px.model.internal.InitResponse;
+import com.mercadopago.android.px.preferences.CheckoutPreference;
+import com.mercadopago.android.px.services.Callback;
+import com.mercadopago.android.px.tracking.internal.events.ConfirmEvent;
 import com.mercadopago.android.px.tracking.internal.events.FrictionEventTracker;
+import com.mercadopago.android.px.tracking.internal.views.OfflineMethodsViewTracker;
 import com.mercadopago.android.px.tracking.internal.views.OneTapViewTracker;
 
 class OfflineMethodsPresenter extends BasePresenter<OfflineMethods.OffMethodsView> implements OfflineMethods.Actions {
@@ -31,8 +41,10 @@ class OfflineMethodsPresenter extends BasePresenter<OfflineMethods.OffMethodsVie
     @NonNull private final PayButtonViewModel payButtonViewModel;
     @NonNull private final AmountRepository amountRepository;
     @NonNull private final DiscountRepository discountRepository;
+    @NonNull /* default */ final InitRepository initRepository;
     private ProductIdProvider productIdProvider;
     @NonNull private final String defaultPaymentTypeId;
+    @Nullable OfflineMethodsCompliance payerCompliance;
 
     private OfflineMethodItem selectedItem;
 
@@ -41,13 +53,15 @@ class OfflineMethodsPresenter extends BasePresenter<OfflineMethods.OffMethodsVie
         @NonNull final AmountRepository amountRepository,
         @NonNull final DiscountRepository discountRepository,
         @NonNull final ProductIdProvider productIdProvider,
-        @NonNull final String defaultPaymentTypeId) {
+        @NonNull final String defaultPaymentTypeId,
+        @NonNull final InitRepository initRepository) {
         this.paymentRepository = paymentRepository;
         this.paymentSettingRepository = paymentSettingRepository;
         this.amountRepository = amountRepository;
         this.discountRepository = discountRepository;
         this.productIdProvider = productIdProvider;
         this.defaultPaymentTypeId = defaultPaymentTypeId;
+        this.initRepository = initRepository;
 
         payButtonViewModel = new PayButtonViewModelMapper().map(
             paymentSettingRepository.getAdvancedConfiguration().getCustomStringConfiguration());
@@ -62,6 +76,12 @@ class OfflineMethodsPresenter extends BasePresenter<OfflineMethods.OffMethodsVie
     }
 
     @Override
+    public void attachView(final OfflineMethods.OffMethodsView view) {
+        super.attachView(view);
+        initPresenter();
+    }
+
+    @Override
     public void onViewResumed() {
         paymentRepository.attach(this);
     }
@@ -72,11 +92,7 @@ class OfflineMethodsPresenter extends BasePresenter<OfflineMethods.OffMethodsVie
     }
 
     @Override
-    public void loadViewModel() {
-        updateModel();
-    }
-
-    private void updateModel() {
+    public void updateModel() {
         final String paymentTypeId =
             selectedItem != null ? selectedItem.getPaymentTypeId() : defaultPaymentTypeId;
 
@@ -92,16 +108,64 @@ class OfflineMethodsPresenter extends BasePresenter<OfflineMethods.OffMethodsVie
         this.selectedItem = selectedItem;
     }
 
+    private void initPresenter() {
+        initRepository.init().execute(new Callback<InitResponse>() {
+            @Override
+            public void success(final InitResponse initResponse) {
+                payerCompliance =
+                    initResponse.getPayerCompliance() != null ? initResponse.getPayerCompliance().getOfflineMethods()
+                        : null;
+            }
+
+            @Override
+            public void failure(final ApiException apiException) {
+                onFailToRetrieveInitResponse();
+            }
+        });
+    }
+
+    private void onFailToRetrieveInitResponse() {
+        throw new IllegalStateException("off methods missing compliance");
+    }
+
     @Override
     public void startSecuredPayment() {
+        if (payerCompliance != null) {
+            if (selectedItem.isAdditionalInfoNeeded() && payerCompliance.isCompliant()) {
+                completePayerInformation();
+            } else if (selectedItem.isAdditionalInfoNeeded()) {
+                getView().startKnowYourCustomerFlow(payerCompliance.getTurnComplianceDeepLink());
+                return;
+            }
+        }
+
         final SecurityValidationData data = SecurityValidationDataFactory.create(productIdProvider);
         getView().startSecurityValidation(data);
     }
 
+    private void completePayerInformation() {
+        final CheckoutPreference checkoutPreference = paymentSettingRepository.getCheckoutPreference();
+        final Payer payer = checkoutPreference.getPayer();
+
+        payer.setFirstName(payerCompliance.getSensitiveInformation().getFirstName());
+        payer.setLastName(payerCompliance.getSensitiveInformation().getLastName());
+        payer.setIdentification(payerCompliance.getSensitiveInformation().getIdentification());
+
+        paymentSettingRepository.configure(checkoutPreference);
+    }
+
+    @Override
+    public void trackAbort() {
+        tracker.trackAbort();
+    }
+
     @Override
     public void startPayment() {
-        // TODO add securityValidation
         refreshExplodingState();
+
+        ConfirmEvent
+            .from(selectedItem.getPaymentTypeId(), selectedItem.getPaymentMethodId(), payerCompliance.isCompliant(),
+                selectedItem.isAdditionalInfoNeeded()).track();
 
         //noinspection ConstantConditions
         paymentRepository
@@ -119,7 +183,6 @@ class OfflineMethodsPresenter extends BasePresenter<OfflineMethods.OffMethodsVie
     private void refreshExplodingState() {
         if (paymentRepository.isExplodingAnimationCompatible()) {
             getView().startLoadingButton(paymentRepository.getPaymentTimeout(), payButtonViewModel);
-            getView().disableCloseButton();
         }
     }
 
@@ -173,5 +236,11 @@ class OfflineMethodsPresenter extends BasePresenter<OfflineMethods.OffMethodsVie
             mercadoPagoError)
             .track();
         getView().showErrorSnackBar(mercadoPagoError);
+    }
+
+    public void trackOfflineMethodsView(final OfflinePaymentTypesMetadata model) {
+        final OfflineMethodsViewTracker offlineMethodsViewTracker =
+            new OfflineMethodsViewTracker(model);
+        setCurrentViewTracker(offlineMethodsViewTracker);
     }
 }
