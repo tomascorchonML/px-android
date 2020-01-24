@@ -91,7 +91,7 @@ public class PaymentService implements PaymentRepository {
 
         handlerWrapper =
             new PaymentServiceHandlerWrapper(this, disabledPaymentMethodRepository, escPaymentManager,
-                instructionsRepository, paymentRewardRepository);
+                instructionsRepository, paymentRewardRepository, userSelectionRepository);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class PaymentService implements PaymentRepository {
         //Paying with saved card without token
         final Card card = userSelectionRepository.getCard();
 
-        if (escPaymentManager.hasEsc(card)) {
+        if (escPaymentManager.hasEsc(card) && !card.shouldInvalidateEsc()) {
             //Saved card has ESC - Try to tokenize
             tokenRepository.createToken(card).enqueue(new Callback<Token>() {
                 @Override
