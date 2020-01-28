@@ -1,3 +1,7 @@
+## VERSION 4.34.0
+_28_01_2020_
+* FIX - Reduce margins of MLBusinessDiscountBoxView in congrats.
+
 ## VERSION 4.33.0
 _24_01_2020_
 * FEATURE - Added local behaviour
